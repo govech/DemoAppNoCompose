@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 通用 -->
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="retry">重试</string>
+    <string name="loading">加载中...</string>
+    <string name="success">成功</string>
+    <string name="failed">失败</string>
+    
+    <!-- 状态提示 -->
+    <string name="no_data">暂无数据</string>
+    <string name="load_error">加载失败</string>
+    <string name="network_error">网络连接失败</string>
+    <string name="server_error">服务器异常</string>
+    
+    <!-- 对话框 -->
+    <string name="dialog_title">提示</string>
+</resources>
