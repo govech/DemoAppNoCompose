@@ -70,4 +70,41 @@
     <string name="language_icon">语言图标</string>
     <string name="language_specific_resources">语言特定资源</string>
     <string name="welcome_image">欢迎图片</string>
+    
+    <!-- 多语言演示页面 -->
+    <string name="multi_language_demo">多语言功能演示</string>
+    <string name="language_switch_demo">语言切换演示</string>
+    <string name="language_switch_demo_desc">演示实时语言切换功能</string>
+    <string name="date_time_format_demo">日期时间格式化演示</string>
+    <string name="date_time_format_demo_desc">展示本地化的日期时间格式化</string>
+    <string name="number_format_demo">数字格式化演示</string>
+    <string name="number_format_demo_desc">展示本地化的数字和货币格式化</string>
+    <string name="network_request_demo">网络请求演示</string>
+    <string name="network_request_demo_desc">展示网络请求中的语言标识</string>
+    <string name="rtl_support_demo">RTL语言支持演示</string>
+    <string name="rtl_support_demo_desc">展示从右到左语言的支持</string>
+    <string name="theme_integration_demo">主题集成演示</string>
+    <string name="theme_integration_demo_desc">展示主题与语言的集成</string>
+    
+    <!-- 演示内容 -->
+    <string name="current_language">当前语言：%s</string>
+    <string name="date_format_example">日期格式</string>
+    <string name="time_format_example">时间格式</string>
+    <string name="datetime_format_example">日期时间格式</string>
+    <string name="relative_time_example">相对时间</string>
+    <string name="number_format_example">数字格式</string>
+    <string name="currency_format_example">货币格式</string>
+    <string name="percentage_format_example">百分比格式</string>
+    <string name="network_request_info">网络请求自动包含Accept-Language请求头</string>
+    <string name="accept_language_header">Accept-Language</string>
+    <string name="network_request_note">这确保服务器返回本地化内容</string>
+    <string name="rtl_support_info">RTL语言通过正确的布局方向自动支持</string>
+    <string name="theme_integration_info">主题颜色和资源会根据不同语言进行适配</string>
+    
+    <!-- 通用 -->
+    <string name="demo_icon">演示图标</string>
+    <string name="demo_title">演示标题</string>
+    <string name="demo_description">演示描述</string>
+    <string name="arrow_forward">前进箭头</string>
+    <string name="ok">确定</string>
 </resources>

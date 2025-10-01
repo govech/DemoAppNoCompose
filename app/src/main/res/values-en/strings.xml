@@ -73,7 +73,7 @@
     <string name="language_specific_resources">Language Specific Resources</string>
     <string name="welcome_image">Welcome image</string>
     
-    <!-- 多语言演示页面 -->
+    <!-- Multi-language Demo -->
     <string name="multi_language_demo">Multi-Language Demo</string>
     <string name="language_switch_demo">Language Switch Demo</string>
     <string name="language_switch_demo_desc">Demonstrate real-time language switching</string>
@@ -88,7 +88,7 @@
     <string name="theme_integration_demo">Theme Integration Demo</string>
     <string name="theme_integration_demo_desc">Show theme and language integration</string>
     
-    <!-- 演示内容 -->
+    <!-- Demo Content -->
     <string name="current_language">Current Language: %s</string>
     <string name="date_format_example">Date Format</string>
     <string name="time_format_example">Time Format</string>
@@ -103,7 +103,7 @@
     <string name="rtl_support_info">RTL languages are automatically supported with proper layout direction</string>
     <string name="theme_integration_info">Theme colors and resources adapt to different languages</string>
     
-    <!-- 通用 -->
+    <!-- Common -->
     <string name="demo_icon">Demo Icon</string>
     <string name="demo_title">Demo Title</string>
     <string name="demo_description">Demo Description</string>

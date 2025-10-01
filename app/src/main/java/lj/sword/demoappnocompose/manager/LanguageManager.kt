@@ -75,17 +75,21 @@ class LocaleManager @Inject constructor(
      * 切换语言
      */
     suspend fun setLocale(language: SupportedLanguage) {
-        // 保存语言设置
+        // 保存语言设置到DataStore
         dataStoreManager.saveLanguage(language.code)
         
+        // 同时保存到SharedPreferences，供attachBaseContext使用
+        val sharedPrefs = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putString("current_language", language.code).apply()
+        
         // 更新当前 Locale
-        currentLocale = Locale(language.code.split("-")[0], 
-            language.code.split("-").getOrNull(1) ?: "")
+        currentLocale = createLocaleFromCode(language.code)
         
         // 通知监听器
         notifyLocaleChanged(currentLocale)
         
         // 发送广播通知所有 Activity
+        android.util.Log.d("LocaleManager", "Sending language change broadcast: ${language.code}")
         LanguageChangeBroadcastReceiver.sendLanguageChangedBroadcast(context, language.code)
     }
 
@@ -136,8 +140,11 @@ class LocaleManager @Inject constructor(
         val supportedLanguage = SupportedLanguage.fromCode(savedLanguage) 
             ?: SupportedLanguage.getDefault()
         
-        currentLocale = Locale(supportedLanguage.code.split("-")[0], 
-            supportedLanguage.code.split("-").getOrNull(1) ?: "")
+        // 同步到SharedPreferences
+        val sharedPrefs = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putString("current_language", supportedLanguage.code).apply()
+        
+        currentLocale = createLocaleFromCode(supportedLanguage.code)
     }
 
     /**
@@ -155,5 +162,28 @@ class LocaleManager @Inject constructor(
         val systemCode = "${systemLocale.language}-${systemLocale.country}"
         
         return SupportedLanguage.fromCode(systemCode) ?: SupportedLanguage.getDefault()
+    }
+
+    /**
+     * 根据语言代码创建Locale
+     */
+    private fun createLocaleFromCode(code: String): Locale {
+        return when (code) {
+            "zh" -> Locale("zh", "CN")
+            "zh-rTW" -> Locale("zh", "TW")
+            "en" -> Locale("en", "US")
+            "ja" -> Locale("ja", "JP")
+            "ko" -> Locale("ko", "KR")
+            else -> {
+                // 通用处理：尝试分割代码
+                val parts = code.split("-")
+                if (parts.size >= 2) {
+                    val country = parts[1].removePrefix("r") // 移除Android的r前缀
+                    Locale(parts[0], country)
+                } else {
+                    Locale(parts[0])
+                }
+            }
+        }
     }
 }

@@ -30,11 +30,15 @@ class LanguageSettingsActivity : BaseActivity<ActivityLanguageSettingsBinding>()
     private val languageViewModel: LanguageViewModel by viewModels()
 
     private lateinit var languageAdapter: LanguageAdapter
+    
+    /** 当前选中的语言（待确认） */
+    private var selectedLanguageForConfirm: lj.sword.demoappnocompose.data.model.LanguageConfig? = null
 
     override fun initView() {
         setupToolbar()
         setupRecyclerView()
         setupSearch()
+        setupConfirmButton()
     }
 
     override fun initData() {
@@ -49,14 +53,36 @@ class LanguageSettingsActivity : BaseActivity<ActivityLanguageSettingsBinding>()
 
     private fun setupRecyclerView() {
         languageAdapter = LanguageAdapter { languageConfig ->
-            // 语言被选中
-            languageViewModel.switchLanguage(languageConfig.language)
+            // 语言被选中（但不立即切换）
+            selectedLanguageForConfirm = languageConfig
+            updateConfirmButtonState()
         }
         
         binding.rvLanguages.apply {
             layoutManager = LinearLayoutManager(this@LanguageSettingsActivity)
             adapter = languageAdapter
         }
+    }
+
+    private fun setupConfirmButton() {
+        binding.btnConfirm.setOnClickListener {
+            selectedLanguageForConfirm?.let { languageConfig ->
+                // 点击确认按钮时才切换语言
+                languageViewModel.switchLanguage(languageConfig.language)
+            }
+        }
+    }
+
+    /**
+     * 更新确认按钮状态
+     */
+    private fun updateConfirmButtonState() {
+        val currentLanguage = languageViewModel.currentLanguage.value
+        val hasSelection = selectedLanguageForConfirm != null
+        val isDifferentFromCurrent = selectedLanguageForConfirm != currentLanguage
+        
+        // 只有选中了不同于当前语言的选项时，确认按钮才可用
+        binding.btnConfirm.isEnabled = hasSelection && isDifferentFromCurrent
     }
 
     private fun setupSearch() {
@@ -94,6 +120,11 @@ class LanguageSettingsActivity : BaseActivity<ActivityLanguageSettingsBinding>()
             languageViewModel.currentLanguage.collect { currentLanguage ->
                 currentLanguage?.let { language ->
                     languageAdapter.setSelectedLanguage(language)
+                    // 如果还没有选择待确认的语言，默认选中当前语言
+                    if (selectedLanguageForConfirm == null) {
+                        selectedLanguageForConfirm = language
+                    }
+                    updateConfirmButtonState()
                 }
             }
         }
@@ -104,9 +135,12 @@ class LanguageSettingsActivity : BaseActivity<ActivityLanguageSettingsBinding>()
                 event?.let { switchEvent ->
                     when (switchEvent) {
                         is LanguageViewModel.LanguageSwitchEvent.Success -> {
-                            // 语言切换成功，显示提示并关闭页面
+                            // 语言切换成功，显示提示
                             binding.root.toast(getString(lj.sword.demoappnocompose.R.string.language_confirm))
-                            finish()
+                            // 延迟关闭页面，让广播有时间处理
+                            binding.root.postDelayed({
+                                finish()
+                            }, 100)
                         }
                         is LanguageViewModel.LanguageSwitchEvent.Error -> {
                             // 语言切换失败，显示错误信息

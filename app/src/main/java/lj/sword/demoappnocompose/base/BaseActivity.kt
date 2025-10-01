@@ -24,6 +24,7 @@ import lj.sword.demoappnocompose.data.model.SupportedLanguage
 import lj.sword.demoappnocompose.data.model.LanguageConfig
 import lj.sword.demoappnocompose.utils.ContextUtils
 import lj.sword.demoappnocompose.R
+import java.util.Locale
 import javax.inject.Inject
 
 
@@ -89,7 +90,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         setListeners()
         observeViewModel()
         // 主题监听已合并到 applyTheme() 方法中
-        // observeLanguageChanges() // 暂时完全禁用，测试是否还会闪烁
+        observeLanguageChanges() // 重新启用语言变化监听
     }
 
     /** 初始化状态栏 */
@@ -234,9 +235,51 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      * 重写 attachBaseContext 以应用语言配置
      */
     override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(newBase)
-        // 语言配置会在 onCreate 中通过 LocaleManager 处理
-        // 这里暂时不处理，因为 Hilt 注入在 attachBaseContext 时还不可用
+        // 应用语言配置到Context
+        val contextWithLanguage = applyLanguageToContext(newBase)
+        super.attachBaseContext(contextWithLanguage)
+    }
+
+    /**
+     * 应用语言配置到Context
+     */
+    private fun applyLanguageToContext(context: Context): Context {
+        return try {
+            // 由于Hilt注入在attachBaseContext时不可用，我们需要直接读取语言设置
+            val sharedPrefs = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+            val languageCode = sharedPrefs.getString("current_language", "zh") ?: "zh"
+            
+            // 创建对应的Locale
+            val locale = createLocaleFromLanguageCode(languageCode)
+            
+            // 应用语言到Context
+            ContextUtils.run { context.wrap(locale) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            context
+        }
+    }
+
+    /**
+     * 根据语言代码创建Locale（与LocaleManager中的逻辑保持一致）
+     */
+    private fun createLocaleFromLanguageCode(code: String): Locale {
+        return when (code) {
+            "zh" -> Locale("zh", "CN")
+            "zh-rTW" -> Locale("zh", "TW")
+            "en" -> Locale("en", "US")
+            "ja" -> Locale("ja", "JP")
+            "ko" -> Locale("ko", "KR")
+            else -> {
+                val parts = code.split("-")
+                if (parts.size >= 2) {
+                    val country = parts[1].removePrefix("r")
+                    Locale(parts[0], country)
+                } else {
+                    Locale(parts[0])
+                }
+            }
+        }
     }
 
     /** 语言变化广播接收器 */
@@ -247,17 +290,22 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      */
     private fun observeLanguageChanges() {
         if (!::localeManager.isInitialized) {
+            android.util.Log.d("BaseActivity", "LocaleManager not initialized in ${this::class.simpleName}")
             return
         }
+        
+        android.util.Log.d("BaseActivity", "Setting up language change observer in ${this::class.simpleName}")
         
         // 初始化当前语言配置
         lifecycleScope.launch {
             val initialLanguage = localeManager.getCurrentLanguage()
             currentLanguageConfig = LanguageConfig(language = initialLanguage, isSelected = true)
+            android.util.Log.d("BaseActivity", "Initial language: ${initialLanguage.code}")
         }
         
         // 注册语言变化广播接收器
         languageChangeReceiver = LanguageChangeBroadcastReceiver { newLanguage ->
+            android.util.Log.d("BaseActivity", "Received language change broadcast: ${newLanguage.code} in ${this::class.simpleName}")
             val newLanguageConfig = LanguageConfig(language = newLanguage, isSelected = true)
             if (currentLanguageConfig != newLanguageConfig) {
                 currentLanguageConfig = newLanguageConfig
@@ -270,12 +318,14 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             languageChangeReceiver!!,
             intentFilter
         )
+        android.util.Log.d("BaseActivity", "Language change receiver registered in ${this::class.simpleName}")
     }
 
     /**
      * 语言变化回调 - 子类可以重写此方法
      */
     protected open fun onLocaleChanged(language: SupportedLanguage) {
+        android.util.Log.d("BaseActivity", "onLocaleChanged called with ${language.code} in ${this::class.simpleName}")
         // 默认行为：重建 Activity 并添加动画效果
         recreateWithAnimation()
     }

@@ -42,18 +42,8 @@ class LanguageAdapter(
         val oldSelected = selectedLanguage
         selectedLanguage = languageConfig
         
-        // 更新UI
-        oldSelected?.let { old ->
-            val oldIndex = currentList.indexOf(old)
-            if (oldIndex != -1) {
-                notifyItemChanged(oldIndex)
-            }
-        }
-        
-        val newIndex = currentList.indexOf(languageConfig)
-        if (newIndex != -1) {
-            notifyItemChanged(newIndex)
-        }
+        // 更新UI - 刷新所有项目以确保只有一个被选中
+        notifyDataSetChanged()
     }
 
     /**
@@ -70,6 +60,9 @@ class LanguageAdapter(
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val languageConfig = getItem(position)
+                    // 立即更新选中状态
+                    setSelectedLanguage(languageConfig)
+                    // 通知外部
                     onLanguageClick(languageConfig)
                 }
             }
@@ -89,9 +82,16 @@ class LanguageAdapter(
                 // 设置选中状态
                 rbSelected.isChecked = isSelected
                 
+                // 禁用RadioButton的点击，只允许整行点击
+                rbSelected.isClickable = false
+                rbSelected.isFocusable = false
+                
                 // 设置选中状态的视觉反馈
-                val alpha = if (isSelected) 1.0f else 0.6f
+                val alpha = if (isSelected) 1.0f else 0.7f
                 root.alpha = alpha
+                
+                // 设置背景色反馈
+                root.isSelected = isSelected
             }
         }
     }

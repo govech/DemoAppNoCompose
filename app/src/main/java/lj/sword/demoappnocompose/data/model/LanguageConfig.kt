@@ -12,31 +12,31 @@ enum class SupportedLanguage(
     val iconRes: Int
 ) {
     CHINESE_SIMPLIFIED(
-        code = "zh-CN",
+        code = "zh",
         displayName = "简体中文",
         nativeName = "简体中文",
         iconRes = R.drawable.ic_language_chinese
     ),
     CHINESE_TRADITIONAL(
-        code = "zh-TW",
+        code = "zh-rTW",
         displayName = "繁体中文",
         nativeName = "繁體中文",
         iconRes = R.drawable.ic_language_chinese
     ),
     ENGLISH(
-        code = "en-US",
+        code = "en",
         displayName = "English",
         nativeName = "English",
         iconRes = R.drawable.ic_language_english
     ),
     JAPANESE(
-        code = "ja-JP",
+        code = "ja",
         displayName = "日本語",
         nativeName = "日本語",
         iconRes = R.drawable.ic_language_japanese
     ),
     KOREAN(
-        code = "ko-KR",
+        code = "ko",
         displayName = "한국어",
         nativeName = "한국어",
         iconRes = R.drawable.ic_language_korean

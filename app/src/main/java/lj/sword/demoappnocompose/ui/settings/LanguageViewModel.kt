@@ -60,24 +60,50 @@ class LanguageViewModel @Inject constructor(
                 val languages = getAvailableLanguagesUseCase.execute()
                 _availableLanguages.value = languages
                 
-                // 监听当前语言变化
-                getCurrentLanguageUseCase.execute().collect { languageConfig ->
-                    _currentLanguage.value = languageConfig
-                    
-                    // 更新可用语言列表中的选中状态
-                    val updatedLanguages = languages.map { language ->
-                        if (language.language == languageConfig.language) {
-                            language.copy(isSelected = true)
-                        } else {
-                            language.copy(isSelected = false)
-                        }
+                // 获取当前语言（一次性获取，不监听）
+                val currentLanguage = getCurrentLanguageUseCase.getCurrentLanguage()
+                val currentLanguageConfig = LanguageConfig(language = currentLanguage, isSelected = true)
+                _currentLanguage.value = currentLanguageConfig
+                
+                // 更新可用语言列表中的选中状态
+                val updatedLanguages = languages.map { language ->
+                    if (language.language == currentLanguage) {
+                        language.copy(isSelected = true)
+                    } else {
+                        language.copy(isSelected = false)
                     }
-                    _availableLanguages.value = updatedLanguages
                 }
+                _availableLanguages.value = updatedLanguages
+                
             } catch (e: Exception) {
                 _languageSwitchEvent.value = LanguageSwitchEvent.Error(e.message ?: "Failed to load language data")
             } finally {
                 _isLoading.value = false
+            }
+        }
+        
+        // 单独启动语言变化监听（不影响loading状态）
+        observeLanguageChanges()
+    }
+
+    /**
+     * 监听语言变化
+     */
+    private fun observeLanguageChanges() {
+        viewModelScope.launch {
+            getCurrentLanguageUseCase.execute().collect { languageConfig ->
+                _currentLanguage.value = languageConfig
+                
+                // 更新可用语言列表中的选中状态
+                val currentLanguages = _availableLanguages.value
+                val updatedLanguages = currentLanguages.map { language ->
+                    if (language.language == languageConfig.language) {
+                        language.copy(isSelected = true)
+                    } else {
+                        language.copy(isSelected = false)
+                    }
+                }
+                _availableLanguages.value = updatedLanguages
             }
         }
     }
@@ -89,18 +115,22 @@ class LanguageViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = true
             
-            switchLanguageUseCase.execute(language).collect { result ->
-                when (result) {
-                    is SwitchLanguageUseCase.LanguageSwitchResult.Success -> {
-                        _languageSwitchEvent.value = LanguageSwitchEvent.Success(language)
-                    }
-                    is SwitchLanguageUseCase.LanguageSwitchResult.Error -> {
-                        _languageSwitchEvent.value = LanguageSwitchEvent.Error(result.message)
+            try {
+                switchLanguageUseCase.execute(language).collect { result ->
+                    when (result) {
+                        is SwitchLanguageUseCase.LanguageSwitchResult.Success -> {
+                            _languageSwitchEvent.value = LanguageSwitchEvent.Success(language)
+                        }
+                        is SwitchLanguageUseCase.LanguageSwitchResult.Error -> {
+                            _languageSwitchEvent.value = LanguageSwitchEvent.Error(result.message)
+                        }
                     }
                 }
+            } catch (e: Exception) {
+                _languageSwitchEvent.value = LanguageSwitchEvent.Error(e.message ?: "Language switch failed")
+            } finally {
+                _isLoading.value = false
             }
-            
-            _isLoading.value = false
         }
     }
 
