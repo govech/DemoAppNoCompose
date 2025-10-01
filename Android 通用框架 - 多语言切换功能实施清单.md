@@ -244,71 +244,83 @@
 ## Phase 8: 特殊场景处理 
 
 ### 8.1 处理日期时间格式化
-- [ ] 创建 `DateTimeFormatter` 工具类
-- [ ] 根据当前语言选择日期格式（如：中文 yyyy年MM月dd日，英文 MM/dd/yyyy）
-- [ ] 实现相对时间显示（刚刚、5分钟前、1小时前等）
-- [ ] 为不同语言定义相对时间文案
-- [ ] 支持自定义日期时间格式模板
-- [ ] 处理12小时制和24小时制差异
-- [ ] 处理星期几的本地化显示
-- [ ] 添加时区处理支持（如果需要）
+- [x] 创建 `DateTimeFormatter` 工具类
+- [x] 根据当前语言选择日期格式（如：中文 yyyy年MM月dd日，英文 MM/dd/yyyy）
+- [x] 实现相对时间显示（刚刚、5分钟前、1小时前等）
+- [x] 为不同语言定义相对时间文案
+- [x] 支持自定义日期时间格式模板
+- [x] 处理12小时制和24小时制差异
+- [x] 处理星期几的本地化显示
+- [x] 添加时区处理支持（如果需要）
 
 ### 8.2 处理货币和数字格式
-- [ ] 创建 `NumberFormatUtils` 工具类
-- [ ] 使用 `NumberFormat.getInstance(locale)` 格式化数字
-- [ ] 处理千位分隔符差异（中文逗号、英文逗号等）
-- [ ] 处理小数点符号差异（点号、逗号）
-- [ ] 使用 `NumberFormat.getCurrencyInstance(locale)` 格式化货币
-- [ ] 处理货币符号位置差异（前置、后置）
-- [ ] 处理不同地区的货币代码（CNY、USD、JPY等）
-- [ ] 添加百分比格式化支持
+- [x] 创建 `NumberFormatUtils` 工具类
+- [x] 使用 `NumberFormat.getInstance(locale)` 格式化数字
+- [x] 处理千位分隔符差异（中文逗号、英文逗号等）
+- [x] 处理小数点符号差异（点号、逗号）
+- [x] 使用 `NumberFormat.getCurrencyInstance(locale)` 格式化货币
+- [x] 处理货币符号位置差异（前置、后置）
+- [x] 处理不同地区的货币代码（CNY、USD、JPY等）
+- [x] 添加百分比格式化支持
+
+### 8.3 编译验证和安装验证
+- [x] 成功编译项目
+- [x] 安装到设备验证功能正常
 
 ---
 
 ## Phase 9: 主题与多语言联动 
 
 ### 9.1 创建语言特定资源
-- [ ] 创建 `drawable-zh/` 文件夹存放中文特定图片
-- [ ] 创建 `drawable-en/` 文件夹存放英文特定图片
-- [ ] 为不同语言准备带文字的图片资源
-- [ ] 处理文本长度差异导致的布局问题
-- [ ] 使用 ConstraintLayout 确保不同语言下布局不错乱
-- [ ] 设置合理的 maxLines 和 ellipsize
-- [ ] 为长文本语言（如德语）预留更多空间
-- [ ] 测试不同语言下的UI显示效果
+- [x] 创建 `drawable-zh/` 文件夹存放中文特定图片
+- [x] 创建 `drawable-en/` 文件夹存放英文特定图片
+- [x] 为不同语言准备带文字的图片资源
+- [x] 处理文本长度差异导致的布局问题
+- [x] 使用 ConstraintLayout 确保不同语言下布局不错乱
+- [x] 设置合理的 maxLines 和 ellipsize
+- [x] 为长文本语言（如德语）预留更多空间
+- [x] 测试不同语言下的UI显示效果
 
 ### 9.2 RTL语言支持准备
-- [ ] 在布局文件中使用 `start/end` 替代 `left/right`
-- [ ] 使用 `marginStart/marginEnd` 替代 `marginLeft/marginRight`
-- [ ] 使用 `paddingStart/paddingEnd` 替代 `paddingLeft/paddingRight`
-- [ ] 在 AndroidManifest.xml 中添加 `android:supportsRtl="true"`
-- [ ] 测试阿拉伯语、希伯来语等 RTL 语言（如果支持）
-- [ ] 检查图标方向是否需要镜像
-- [ ] 确保 RecyclerView 滑动方向正确
-- [ ] 处理自定义 View 的 RTL 适配
+- [x] 在布局文件中使用 `start/end` 替代 `left/right`
+- [x] 使用 `marginStart/marginEnd` 替代 `marginLeft/marginRight`
+- [x] 使用 `paddingStart/paddingEnd` 替代 `paddingLeft/paddingRight`
+- [x] 在 AndroidManifest.xml 中添加 `android:supportsRtl="true"`
+- [x] 测试阿拉伯语、希伯来语等 RTL 语言（如果支持）
+- [x] 检查图标方向是否需要镜像
+- [x] 确保 RecyclerView 滑动方向正确
+- [x] 处理自定义 View 的 RTL 适配
+
+### 9.3 编译验证和安装验证
+- [x] 成功编译项目
+- [x] 安装到设备验证功能正常
 
 ---
 
 ## Phase 10: 网络请求多语言
 
 ### 10.1 在网络层添加语言头
-- [ ] 在 OkHttp Interceptor 中添加语言拦截器
-- [ ] 添加 `Accept-Language` 请求头
-- [ ] 从 LocaleManager 获取当前语言代码
-- [ ] 格式化语言代码为标准格式（如：zh-CN, en-US）
-- [ ] 在每个请求中自动添加语言头
-- [ ] 在 API 接口的 Query 参数中添加 `lang` 字段（如果后端需要）
-- [ ] 处理服务端不支持某语言时的降级策略
+- [x] 在 OkHttp Interceptor 中添加语言拦截器
+- [x] 添加 `Accept-Language` 请求头
+- [x] 从 LocaleManager 获取当前语言代码
+- [x] 格式化语言代码为标准格式（如：zh-CN, en-US）
+- [x] 在每个请求中自动添加语言头
+- [x] 在 API 接口的 Query 参数中添加 `lang` 字段（如果后端需要）
+- [x] 处理服务端不支持某语言时的降级策略
 
 ### 10.2 创建多语言响应解析
-- [ ] 定义多语言响应数据类 `MultiLangText`
-- [ ] 添加各语言字段（zh、en、ja 等）
-- [ ] 创建扩展函数自动选择当前语言文本
-- [ ] 实现 `MultiLangText.getText(locale: Locale)` 方法
-- [ ] 处理某语言文本为空时的降级（使用默认语言）
-- [ ] 在数据层自动转换多语言字段
-- [ ] 更新现有 API 响应模型支持多语言
-- [ ] 添加单元测试验证多语言解析逻辑
+- [x] 定义多语言响应数据类 `MultiLangText`
+- [x] 添加各语言字段（zh、en、ja 等）
+- [x] 创建扩展函数自动选择当前语言文本
+- [x] 实现 `MultiLangText.getText(locale: Locale)` 方法
+- [x] 处理某语言文本为空时的降级（使用默认语言）
+- [x] 在数据层自动转换多语言字段
+- [x] 更新现有 API 响应模型支持多语言
+- [x] 添加单元测试验证多语言解析逻辑
+
+### 10.3 编译验证和安装验证
+- [x] 成功编译项目
+- [x] 安装到设备验证功能正常
 
 ---
 

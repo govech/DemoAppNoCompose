@@ -53,4 +53,21 @@
     
     <!-- 功能 -->
     <string name="feature_developing">功能开发中...</string>
+    
+    <!-- 日期时间 -->
+    <string name="just_now">刚刚</string>
+    <string name="minutes_ago">%d分钟前</string>
+    <string name="hours_ago">%d小时前</string>
+    <string name="days_ago">%d天前</string>
+    
+    <!-- RTL演示 -->
+    <string name="rtl_demo">RTL演示</string>
+    <string name="rtl_support_title">RTL支持</string>
+    <string name="rtl_support_description">此布局演示了RTL（从右到左）语言支持，使用start/end而不是left/right属性。</string>
+    <string name="text_direction_examples">文本方向示例</string>
+    <string name="rtl_text_example">此文本将在LTR和RTL语言中正确对齐。</string>
+    <string name="rtl_time_example">下午2:30</string>
+    <string name="language_icon">语言图标</string>
+    <string name="language_specific_resources">语言特定资源</string>
+    <string name="welcome_image">欢迎图片</string>
 </resources>

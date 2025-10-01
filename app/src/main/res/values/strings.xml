@@ -55,4 +55,21 @@
     
     <!-- Features -->
     <string name="feature_developing">Feature under development</string>
+    
+    <!-- DateTime -->
+    <string name="just_now">Just now</string>
+    <string name="minutes_ago">%d minutes ago</string>
+    <string name="hours_ago">%d hours ago</string>
+    <string name="days_ago">%d days ago</string>
+    
+    <!-- RTL Demo -->
+    <string name="rtl_demo">RTL Demo</string>
+    <string name="rtl_support_title">RTL Support</string>
+    <string name="rtl_support_description">This layout demonstrates RTL (Right-to-Left) language support using start/end instead of left/right attributes.</string>
+    <string name="text_direction_examples">Text Direction Examples</string>
+    <string name="rtl_text_example">This text will be properly aligned for both LTR and RTL languages.</string>
+    <string name="rtl_time_example">2:30 PM</string>
+    <string name="language_icon">Language icon</string>
+    <string name="language_specific_resources">Language Specific Resources</string>
+    <string name="welcome_image">Welcome image</string>
 </resources>
