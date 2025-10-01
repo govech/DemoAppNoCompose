@@ -1,6 +1,7 @@
 package lj.sword.demoappnocompose.base
 
 import android.content.Context
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,13 +11,17 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewbinding.ViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import lj.sword.demoappnocompose.manager.ThemeManager
 import lj.sword.demoappnocompose.manager.LocaleManager
+import lj.sword.demoappnocompose.manager.LanguageChangeBroadcastReceiver
+import lj.sword.demoappnocompose.manager.LanguageChangeConstants
 import lj.sword.demoappnocompose.data.model.ThemeConfig
 import lj.sword.demoappnocompose.data.model.SupportedLanguage
+import lj.sword.demoappnocompose.data.model.LanguageConfig
 import lj.sword.demoappnocompose.utils.ContextUtils
 import lj.sword.demoappnocompose.R
 import javax.inject.Inject
@@ -65,6 +70,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     /** 当前主题配置 */
     private var currentThemeConfig: ThemeConfig? = null
 
+    /** 当前语言配置 */
+    private var currentLanguageConfig: LanguageConfig? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // 在super.onCreate之前应用主题和语言
         applyTheme()
@@ -80,8 +88,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         initData()
         setListeners()
         observeViewModel()
-        observeThemeChanges()
-        observeLanguageChanges()
+        // 主题监听已合并到 applyTheme() 方法中
+        // observeLanguageChanges() // 暂时完全禁用，测试是否还会闪烁
     }
 
     /** 初始化状态栏 */
@@ -162,35 +170,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     }
 
     /**
-     * 应用主题
+     * 应用主题并观察主题变化
      */
     private fun applyTheme() {
-        if (!::themeManager.isInitialized) {
-            return
-        }
-        
-        lifecycleScope.launch {
-            themeManager.getCurrentThemeConfig().collect { themeConfig ->
-                currentThemeConfig = themeConfig
-                
-                // 判断是否跟随系统
-                val isDarkMode = if (themeConfig.followSystem) {
-                    themeManager.isSystemDarkMode(this@BaseActivity)
-                } else {
-                    themeConfig.isDarkMode
-                }
-                
-                // 应用主题
-                val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
-                themeManager.applyTheme(this@BaseActivity, finalThemeConfig)
-            }
-        }
-    }
-
-    /**
-     * 观察主题变化
-     */
-    private fun observeThemeChanges() {
         if (!::themeManager.isInitialized) {
             return
         }
@@ -200,7 +182,23 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
                 themeManager.getCurrentThemeConfig().collect { themeConfig ->
                     // 如果主题配置发生变化，重新应用主题
                     if (currentThemeConfig != themeConfig) {
-                        recreate()
+                        currentThemeConfig = themeConfig
+                        
+                        // 判断是否跟随系统
+                        val isDarkMode = if (themeConfig.followSystem) {
+                            themeManager.isSystemDarkMode(this@BaseActivity)
+                        } else {
+                            themeConfig.isDarkMode
+                        }
+                        
+                        // 应用主题
+                        val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
+                        themeManager.applyTheme(this@BaseActivity, finalThemeConfig)
+                        
+                        // 只有在主题真的发生变化时才重建 Activity
+                        if (currentThemeConfig != null) {
+                            recreate()
+                        }
                     }
                 }
             }
@@ -241,6 +239,9 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         // 这里暂时不处理，因为 Hilt 注入在 attachBaseContext 时还不可用
     }
 
+    /** 语言变化广播接收器 */
+    private var languageChangeReceiver: LanguageChangeBroadcastReceiver? = null
+
     /**
      * 观察语言变化
      */
@@ -249,14 +250,26 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             return
         }
         
+        // 初始化当前语言配置
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                localeManager.getCurrentLanguageConfig().collect { languageConfig ->
-                    // 语言变化时重建 Activity
-                    onLocaleChanged(languageConfig.language)
-                }
+            val initialLanguage = localeManager.getCurrentLanguage()
+            currentLanguageConfig = LanguageConfig(language = initialLanguage, isSelected = true)
+        }
+        
+        // 注册语言变化广播接收器
+        languageChangeReceiver = LanguageChangeBroadcastReceiver { newLanguage ->
+            val newLanguageConfig = LanguageConfig(language = newLanguage, isSelected = true)
+            if (currentLanguageConfig != newLanguageConfig) {
+                currentLanguageConfig = newLanguageConfig
+                onLocaleChanged(newLanguage)
             }
         }
+        
+        val intentFilter = IntentFilter(LanguageChangeConstants.ACTION_LOCALE_CHANGED)
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            languageChangeReceiver!!,
+            intentFilter
+        )
     }
 
     /**
@@ -265,6 +278,15 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     protected open fun onLocaleChanged(language: SupportedLanguage) {
         // 默认行为：重建 Activity
         recreate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // 注销语言变化广播接收器
+        languageChangeReceiver?.let { receiver ->
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver)
+        }
+        languageChangeReceiver = null
     }
 
     /**

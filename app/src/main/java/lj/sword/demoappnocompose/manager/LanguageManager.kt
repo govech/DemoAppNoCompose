@@ -84,6 +84,9 @@ class LocaleManager @Inject constructor(
         
         // 通知监听器
         notifyLocaleChanged(currentLocale)
+        
+        // 发送广播通知所有 Activity
+        LanguageChangeBroadcastReceiver.sendLanguageChangedBroadcast(context, language.code)
     }
 
     /**
