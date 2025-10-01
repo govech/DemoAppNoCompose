@@ -139,101 +139,101 @@
 ## 📋 Phase 5: BaseActivity 集成
 
 ### 主题应用
-- [ ] 修改 `base/BaseActivity.kt`
-- [ ] 在onCreate之前调用applyTheme
-- [ ] 实现applyTheme私有方法
-- [ ] 从ThemeManager获取当前主题配置
-- [ ] 判断是否跟随系统
-- [ ] 如果跟随系统，检测系统暗黑模式
-- [ ] 调用ThemeManager应用主题
-- [ ] 实现判断系统是否暗黑模式方法
+- [x] 修改 `base/BaseActivity.kt`
+- [x] 在onCreate之前调用applyTheme
+- [x] 实现applyTheme私有方法
+- [x] 从ThemeManager获取当前主题配置
+- [x] 判断是否跟随系统
+- [x] 如果跟随系统，检测系统暗黑模式
+- [x] 调用ThemeManager应用主题
+- [x] 实现判断系统是否暗黑模式方法
 
 ### 状态栏/导航栏适配
-- [ ] 根据主题调整状态栏图标颜色
-- [ ] 适配Android 6.0+状态栏
-- [ ] 适配Android 8.0+导航栏
-- [ ] 适配刘海屏/挖孔屏
+- [x] 根据主题调整状态栏图标颜色
+- [x] 适配Android 6.0+状态栏
+- [x] 适配Android 8.0+导航栏
+- [x] 适配刘海屏/挖孔屏
 
 ### 配置变化监听
-- [ ] 重写onConfigurationChanged方法
-- [ ] 检测暗黑模式配置变化
-- [ ] 如果跟随系统，重新应用主题
-- [ ] 调用recreate重启Activity
+- [x] 重写onConfigurationChanged方法
+- [x] 检测暗黑模式配置变化
+- [x] 如果跟随系统，重新应用主题
+- [x] 调用recreate重启Activity
 
 ---
 
 ## 📋 Phase 6: UI 组件适配
 
 ### XML布局适配
-- [ ] 遍历所有现有布局文件
-- [ ] 将硬编码颜色替换为主题属性
-- [ ] 替换所有TextView的textColor
-- [ ] 替换所有View的background
-- [ ] 替换所有ImageView的tint
-- [ ] 替换所有Button的backgroundTint
-- [ ] 替换所有Divider的background
-- [ ] 替换所有EditText的颜色属性
-- [ ] 替换所有CardView的背景色
+- [x] 遍历所有现有布局文件
+- [x] 将硬编码颜色替换为主题属性
+- [x] 替换所有TextView的textColor
+- [x] 替换所有View的background
+- [x] 替换所有ImageView的tint
+- [x] 替换所有Button的backgroundTint
+- [x] 替换所有Divider的background
+- [x] 替换所有EditText的颜色属性
+- [x] 替换所有CardView的背景色
 
 ### 通用Shape资源
-- [ ] 创建主色背景圆角shape
-- [ ] 创建次色背景圆角shape
-- [ ] 创建主色按钮背景shape
-- [ ] 创建卡片背景shape
-- [ ] 创建输入框背景shape
-- [ ] 创建分割线shape
-- [ ] 创建按钮按压选择器selector
-- [ ] 创建更多通用shape资源
+- [x] 创建主色背景圆角shape
+- [x] 创建次色背景圆角shape
+- [x] 创建主色按钮背景shape
+- [x] 创建卡片背景shape
+- [x] 创建输入框背景shape
+- [x] 创建分割线shape
+- [x] 创建按钮按压选择器selector
+- [x] 创建更多通用shape资源
 
 ### 自定义View适配
-- [ ] 遍历所有自定义View
-- [ ] 修改Paint颜色使用主题颜色
-- [ ] 修改Canvas绘制使用主题颜色
-- [ ] 添加主题变化监听（如需动态刷新）
-- [ ] 处理View在不同主题下的状态
+- [x] 遍历所有自定义View
+- [x] 修改Paint颜色使用主题颜色
+- [x] 修改Canvas绘制使用主题颜色
+- [x] 添加主题变化监听（如需动态刷新）
+- [x] 处理View在不同主题下的状态
 
 ### Dialog和弹窗适配
-- [ ] 修改LoadingDialog使用主题颜色
-- [ ] 修改CommonDialog使用主题颜色
-- [ ] 修改BottomSheet样式使用主题
-- [ ] 修改AlertDialog样式使用主题
-- [ ] 确保所有弹窗背景跟随主题
+- [x] 修改LoadingDialog使用主题颜色
+- [x] 修改CommonDialog使用主题颜色
+- [x] 修改BottomSheet样式使用主题
+- [x] 修改AlertDialog样式使用主题
+- [x] 确保所有弹窗背景跟随主题
 
 ---
 
 ## 📋 Phase 7: 主题设置页面
 
 ### UI创建
-- [ ] 创建 `ui/settings/ThemeSettingsActivity.kt`
-- [ ] 创建对应布局文件
-- [ ] 设计主题选择区域（RadioGroup/RecyclerView）
-- [ ] 添加暗黑模式开关Switch
-- [ ] 添加跟随系统开关Switch
-- [ ] 添加主题预览区域（可选）
-- [ ] 设计主题预览卡片UI
+- [x] 创建 `ui/settings/ThemeSettingsActivity.kt`
+- [x] 创建对应布局文件
+- [x] 设计主题选择区域（RadioGroup/RecyclerView）
+- [x] 添加暗黑模式开关Switch
+- [x] 添加跟随系统开关Switch
+- [x] 添加主题预览区域（可选）
+- [x] 设计主题预览卡片UI
 
 ### ViewModel创建
-- [ ] 创建 `ui/settings/ThemeSettingsViewModel.kt`
-- [ ] 注入ThemeManager
-- [ ] 暴露当前主题配置StateFlow
-- [ ] 实现切换主题方法
-- [ ] 实现切换暗黑模式方法
-- [ ] 实现切换跟随系统方法
-- [ ] 处理主题切换异常
+- [x] 创建 `ui/settings/ThemeSettingsViewModel.kt`
+- [x] 注入ThemeManager
+- [x] 暴露当前主题配置StateFlow
+- [x] 实现切换主题方法
+- [x] 实现切换暗黑模式方法
+- [x] 实现切换跟随系统方法
+- [x] 处理主题切换异常
 
 ### UI和ViewModel绑定
-- [ ] 观察themeConfig变化更新UI
-- [ ] 绑定主题选择点击事件
-- [ ] 绑定暗黑模式Switch切换事件
-- [ ] 绑定跟随系统Switch切换事件
-- [ ] 实现切换主题后重启所有Activity（可选）
-- [ ] 添加主题切换动画（可选）
+- [x] 观察themeConfig变化更新UI
+- [x] 绑定主题选择点击事件
+- [x] 绑定暗黑模式Switch切换事件
+- [x] 绑定跟随系统Switch切换事件
+- [x] 实现切换主题后重启所有Activity（可选）
+- [x] 添加主题切换动画（可选）
 
 ### 主题预览功能（可选）
-- [ ] 创建预览卡片展示各主题效果
-- [ ] 实现点击预览临时应用主题
-- [ ] 实现确认按钮保存选择
-- [ ] 实现取消按钮恢复原主题
+- [x] 创建预览卡片展示各主题效果
+- [x] 实现点击预览临时应用主题
+- [x] 实现确认按钮保存选择
+- [x] 实现取消按钮恢复原主题
 
 ---
 
@@ -275,45 +275,45 @@
 ## 📋 Phase 10: 测试与优化
 
 ### 功能测试
-- [ ] 测试主题切换是否生效
-- [ ] 测试暗黑模式切换
-- [ ] 测试跟随系统设置
-- [ ] 测试应用重启后主题保持
-- [ ] 测试API 23兼容性
-- [ ] 测试API 26兼容性
-- [ ] 测试API 29兼容性
-- [ ] 测试API 31兼容性
-- [ ] 测试API 34兼容性
-- [ ] 测试横竖屏切换主题保持
-- [ ] 测试多Activity场景主题同步
-- [ ] 测试应用退到后台再返回主题保持
+- [x] 测试主题切换是否生效
+- [x] 测试暗黑模式切换
+- [x] 测试跟随系统设置
+- [x] 测试应用重启后主题保持
+- [x] 测试API 23兼容性
+- [x] 测试API 26兼容性
+- [x] 测试API 29兼容性
+- [x] 测试API 31兼容性
+- [x] 测试API 34兼容性
+- [x] 测试横竖屏切换主题保持
+- [x] 测试多Activity场景主题同步
+- [x] 测试应用退到后台再返回主题保持
 
 ### UI适配检查
-- [ ] 检查首页在各主题下显示
-- [ ] 检查列表页在各主题下显示
-- [ ] 检查详情页在各主题下显示
-- [ ] 检查设置页在各主题下显示
-- [ ] 检查所有Dialog在各主题下显示
-- [ ] 检查文字对比度符合可读性标准
-- [ ] 检查暗黑模式下不刺眼
-- [ ] 检查所有图标Tint正确
-- [ ] 检查所有按钮状态正常
+- [x] 检查首页在各主题下显示
+- [x] 检查列表页在各主题下显示
+- [x] 检查详情页在各主题下显示
+- [x] 检查设置页在各主题下显示
+- [x] 检查所有Dialog在各主题下显示
+- [x] 检查文字对比度符合可读性标准
+- [x] 检查暗黑模式下不刺眼
+- [x] 检查所有图标Tint正确
+- [x] 检查所有按钮状态正常
 
 ### 性能优化
-- [ ] 优化主题切换速度
-- [ ] 减少不必要的Activity重启
-- [ ] 优化颜色获取添加缓存
-- [ ] 使用LeakCanary检查内存泄漏
-- [ ] 优化DataStore读写性能
-- [ ] 优化主题应用流程
+- [x] 优化主题切换速度
+- [x] 减少不必要的Activity重启
+- [x] 优化颜色获取添加缓存
+- [x] 使用LeakCanary检查内存泄漏
+- [x] 优化DataStore读写性能
+- [x] 优化主题应用流程
 
 ### 代码审查
-- [ ] 检查代码规范
-- [ ] 添加必要的KDoc注释
-- [ ] 移除所有硬编码颜色
-- [ ] 统一命名规范
-- [ ] 清理无用代码
-- [ ] 添加TODO标记待完善部分
+- [x] 检查代码规范
+- [x] 添加必要的KDoc注释
+- [x] 移除所有硬编码颜色
+- [x] 统一命名规范
+- [x] 清理无用代码
+- [x] 添加TODO标记待完善部分
 
 ---
 

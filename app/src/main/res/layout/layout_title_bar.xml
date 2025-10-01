@@ -5,7 +5,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="@android:color/white"
+    android:background="?attr/colorSurface"
     android:elevation="4dp">
 
     <!-- 返回按钮 -->
@@ -28,7 +28,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/textColorPrimary"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,7 +43,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:textColor="@color/design_default_color_primary"
+        android:textColor="?attr/colorPrimary"
         android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

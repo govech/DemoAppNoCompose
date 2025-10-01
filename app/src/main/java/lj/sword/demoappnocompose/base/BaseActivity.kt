@@ -1,5 +1,6 @@
 package lj.sword.demoappnocompose.base
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +10,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import lj.sword.demoappnocompose.manager.ThemeManager
+import lj.sword.demoappnocompose.data.model.ThemeConfig
+import lj.sword.demoappnocompose.R
+import javax.inject.Inject
 
 
 
@@ -24,7 +30,7 @@ fun <VB : ViewBinding> AppCompatActivity.inflateBinding(
 
 /**
  * Activity 基类
- * 提供统一的 ViewBinding、ViewModel 绑定、状态栏管理、Loading 显示等功能
+ * 提供统一的 ViewBinding、ViewModel 绑定、状态栏管理、Loading 显示、主题管理等功能
  *
  * @param VB ViewBinding 类型
  * @author Sword
@@ -44,7 +50,15 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     /** 是否第一次加载 */
     private var isFirstLoad = true
 
+    /** 主题管理器 - 子类需要注入 */
+    protected lateinit var themeManager: ThemeManager
+
+    /** 当前主题配置 */
+    private var currentThemeConfig: ThemeConfig? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 在super.onCreate之前应用主题
+        applyTheme()
         super.onCreate(savedInstanceState)
 
         // 使用扩展函数自动创建 ViewBinding（无反射）
@@ -57,14 +71,44 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         initData()
         setListeners()
         observeViewModel()
+        observeThemeChanges()
     }
 
     /** 初始化状态栏 */
     protected open fun initStatusBar() {
-        window.statusBarColor = ContextCompat.getColor(this, android.R.color.white)
+        // 使用主题颜色设置状态栏
+        val statusBarColor = getPrimaryColor()
+        window.statusBarColor = statusBarColor
+        
+        // 根据状态栏颜色亮度设置状态栏图标颜色
+        val isLightStatusBar = isLightColor(statusBarColor)
         WindowInsetsControllerCompat(window, window.decorView).apply {
-            isAppearanceLightStatusBars = true // 替代已废弃的 SYSTEM_UI_FLAG
+            isAppearanceLightStatusBars = isLightStatusBar
         }
+    }
+
+    /**
+     * 获取主色
+     */
+    protected fun getPrimaryColor(): Int {
+        return if (::themeManager.isInitialized) {
+            themeManager.getThemeColor(this, R.attr.colorPrimary)
+        } else {
+            ContextCompat.getColor(this, android.R.color.white)
+        }
+    }
+
+    /**
+     * 判断颜色是否为浅色
+     */
+    private fun isLightColor(color: Int): Boolean {
+        val red = (color shr 16) and 0xFF
+        val green = (color shr 8) and 0xFF
+        val blue = color and 0xFF
+        
+        // 使用相对亮度公式
+        val luminance = (0.299 * red + 0.587 * green + 0.114 * blue) / 255
+        return luminance > 0.5
     }
 
     /** 初始化视图 */
@@ -104,6 +148,77 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         if (isFirstLoad) {
             lazyLoad()
             isFirstLoad = false
+        }
+    }
+
+    /**
+     * 应用主题
+     */
+    private fun applyTheme() {
+        if (!::themeManager.isInitialized) {
+            return
+        }
+        
+        lifecycleScope.launch {
+            themeManager.getCurrentThemeConfig().collect { themeConfig ->
+                currentThemeConfig = themeConfig
+                
+                // 判断是否跟随系统
+                val isDarkMode = if (themeConfig.followSystem) {
+                    themeManager.isSystemDarkMode(this@BaseActivity)
+                } else {
+                    themeConfig.isDarkMode
+                }
+                
+                // 应用主题
+                val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
+                themeManager.applyTheme(this@BaseActivity, finalThemeConfig)
+            }
+        }
+    }
+
+    /**
+     * 观察主题变化
+     */
+    private fun observeThemeChanges() {
+        if (!::themeManager.isInitialized) {
+            return
+        }
+        
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                themeManager.getCurrentThemeConfig().collect { themeConfig ->
+                    // 如果主题配置发生变化，重新应用主题
+                    if (currentThemeConfig != themeConfig) {
+                        recreate()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 判断系统是否处于暗黑模式
+     */
+    private fun isSystemDarkMode(): Boolean {
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
+    }
+
+    /**
+     * 配置变化监听
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        
+        // 检测暗黑模式配置变化
+        val isDarkMode = (newConfig.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        
+        // 如果跟随系统，重新应用主题
+        currentThemeConfig?.let { themeConfig ->
+            if (themeConfig.followSystem && themeConfig.isDarkMode != isDarkMode) {
+                recreate()
+            }
         }
     }
 }
