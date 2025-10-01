@@ -1,8 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 暗黑模式颜色配置 -->
-    <color name="background_color">#121212</color>
-    <color name="surface_color">#1E1E1E</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#B0B0B0</color>
+    <!-- ========== 主题1: Default (夜间模式) ========== -->
+    <!-- 主色系 -->
+    <color name="default_primary">#90CAF9</color>
+    <color name="default_primary_variant">#64B5F6</color>
+    <color name="default_on_primary">#000000</color>
+    
+    <!-- 次色系 -->
+    <color name="default_secondary">#03DAC6</color>
+    <color name="default_secondary_variant">#03DAC6</color>
+    <color name="default_on_secondary">#000000</color>
+    
+    <!-- 背景色系 -->
+    <color name="default_background">#121212</color>
+    <color name="default_surface">#1E1E1E</color>
+    <color name="default_on_background">#E6E1E5</color>
+    <color name="default_on_surface">#E6E1E5</color>
+    
+    <!-- ========== 主题2: Business (夜间模式) ========== -->
+    <!-- 主色系 -->
+    <color name="business_primary">#90CAF9</color>
+    <color name="business_primary_variant">#64B5F6</color>
+    <color name="business_on_primary">#000000</color>
+    
+    <!-- 次色系 -->
+    <color name="business_secondary">#9E9E9E</color>
+    <color name="business_secondary_variant">#757575</color>
+    <color name="business_on_secondary">#000000</color>
+    
+    <!-- 背景色系 -->
+    <color name="business_background">#121212</color>
+    <color name="business_surface">#1E1E1E</color>
+    <color name="business_on_background">#E0E0E0</color>
+    <color name="business_on_surface">#E0E0E0</color>
+    
+    <!-- ========== 主题3: Vibrant (夜间模式) ========== -->
+    <!-- 主色系 -->
+    <color name="vibrant_primary">#CE93D8</color>
+    <color name="vibrant_primary_variant">#BA68C8</color>
+    <color name="vibrant_on_primary">#000000</color>
+    
+    <!-- 次色系 -->
+    <color name="vibrant_secondary">#F8BBD9</color>
+    <color name="vibrant_secondary_variant">#F48FB1</color>
+    <color name="vibrant_on_secondary">#000000</color>
+    
+    <!-- 背景色系 -->
+    <color name="vibrant_background">#121212</color>
+    <color name="vibrant_surface">#1E1E1E</color>
+    <color name="vibrant_on_background">#E1BEE7</color>
+    <color name="vibrant_on_surface">#E1BEE7</color>
+    
+    <!-- ========== 功能色系 (夜间模式) ========== -->
+    <color name="color_error">#F44336</color>
+    <color name="color_success">#4CAF50</color>
+    <color name="color_warning">#FF9800</color>
+    <color name="color_info">#2196F3</color>
+    
+    <!-- ========== 文本色系 (夜间模式) ========== -->
+    <color name="text_primary">#E6E1E5</color>
+    <color name="text_secondary">#CAC4D0</color>
+    <color name="text_tertiary">#938F99</color>
+    <color name="text_disabled">#49454F</color>
+    
+    <!-- ========== 其他色系 (夜间模式) ========== -->
+    <color name="color_divider">#49454F</color>
+    <color name="color_border">#938F99</color>
 </resources>
