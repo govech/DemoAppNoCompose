@@ -1,5 +1,6 @@
 package lj.sword.demoappnocompose.base
 
+import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,10 @@ import androidx.viewbinding.ViewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import lj.sword.demoappnocompose.manager.ThemeManager
+import lj.sword.demoappnocompose.manager.LocaleManager
 import lj.sword.demoappnocompose.data.model.ThemeConfig
+import lj.sword.demoappnocompose.data.model.SupportedLanguage
+import lj.sword.demoappnocompose.utils.ContextUtils
 import lj.sword.demoappnocompose.R
 import javax.inject.Inject
 
@@ -51,13 +55,18 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     private var isFirstLoad = true
 
     /** 主题管理器 - 子类需要注入 */
-    protected lateinit var themeManager: ThemeManager
+    @Inject
+    internal lateinit var themeManager: ThemeManager
+
+    /** 语言管理器 - 子类需要注入 */
+    @Inject
+    internal lateinit var localeManager: LocaleManager
 
     /** 当前主题配置 */
     private var currentThemeConfig: ThemeConfig? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 在super.onCreate之前应用主题
+        // 在super.onCreate之前应用主题和语言
         applyTheme()
         super.onCreate(savedInstanceState)
 
@@ -72,6 +81,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         setListeners()
         observeViewModel()
         observeThemeChanges()
+        observeLanguageChanges()
     }
 
     /** 初始化状态栏 */
@@ -219,6 +229,61 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             if (themeConfig.followSystem && themeConfig.isDarkMode != isDarkMode) {
                 recreate()
             }
+        }
+    }
+
+    /**
+     * 重写 attachBaseContext 以应用语言配置
+     */
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(newBase)
+        // 语言配置会在 onCreate 中通过 LocaleManager 处理
+        // 这里暂时不处理，因为 Hilt 注入在 attachBaseContext 时还不可用
+    }
+
+    /**
+     * 观察语言变化
+     */
+    private fun observeLanguageChanges() {
+        if (!::localeManager.isInitialized) {
+            return
+        }
+        
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                localeManager.getCurrentLanguageConfig().collect { languageConfig ->
+                    // 语言变化时重建 Activity
+                    onLocaleChanged(languageConfig.language)
+                }
+            }
+        }
+    }
+
+    /**
+     * 语言变化回调 - 子类可以重写此方法
+     */
+    protected open fun onLocaleChanged(language: SupportedLanguage) {
+        // 默认行为：重建 Activity
+        recreate()
+    }
+
+    /**
+     * 获取当前语言
+     */
+    protected suspend fun getCurrentLanguage(): SupportedLanguage {
+        return if (::localeManager.isInitialized) {
+            localeManager.getCurrentLanguage()
+        } else {
+            SupportedLanguage.getDefault()
+        }
+    }
+
+    /**
+     * 切换语言
+     */
+    protected suspend fun switchLanguage(language: SupportedLanguage) {
+        if (::localeManager.isInitialized) {
+            localeManager.setLocale(language)
         }
     }
 }

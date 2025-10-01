@@ -117,6 +117,26 @@ class DataStoreManager @Inject constructor(
         }
     }
 
+    /**
+     * 获取语言设置（suspend）
+     */
+    suspend fun getLanguage(): String {
+        var language = DEFAULT_LANGUAGE
+        dataStore.data.collect { preferences ->
+            language = preferences[KEY_LANGUAGE] ?: DEFAULT_LANGUAGE
+        }
+        return language
+    }
+
+    /**
+     * 清除语言设置
+     */
+    suspend fun clearLanguage() {
+        dataStore.edit { preferences ->
+            preferences.remove(KEY_LANGUAGE)
+        }
+    }
+
     // ==================== Theme ====================
     
     /**
