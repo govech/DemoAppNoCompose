@@ -1,13 +1,16 @@
 package lj.sword.demoappnocompose.ui.activity
 
+import android.view.LayoutInflater
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import lj.sword.demoappnocompose.MainActivity
 import lj.sword.demoappnocompose.base.BaseActivity
 import lj.sword.demoappnocompose.base.UiState
 import lj.sword.demoappnocompose.databinding.ActivityLoginBinding
 import lj.sword.demoappnocompose.ext.onSingleClick
+import lj.sword.demoappnocompose.ext.startActivityAndFinish
 import lj.sword.demoappnocompose.ext.toast
 import lj.sword.demoappnocompose.manager.Logger
 import lj.sword.demoappnocompose.manager.TrackManager
@@ -26,13 +29,12 @@ import lj.sword.demoappnocompose.widget.LoadingDialog
  * @since 1.0.0
  */
 @AndroidEntryPoint
-class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
+class LoginActivity : BaseActivity<ActivityLoginBinding>() {
+
+    override val bindingInflater: (LayoutInflater) -> ActivityLoginBinding = ActivityLoginBinding::inflate
 
     override val viewModel: LoginViewModel by viewModels()
 
-    override fun createBinding(): ActivityLoginBinding {
-        return ActivityLoginBinding.inflate(layoutInflater)
-    }
 
     override fun initView() {
         // 初始化视图
@@ -136,19 +138,19 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>() {
                         // 跳转到主页（这里暂时关闭当前页面）
                         // startActivity<MainActivity>()
                         toast("登录功能演示完成！")
-                        
+                        startActivityAndFinish<MainActivity>()
                         // 重置状态，允许再次登录测试
                         viewModel.resetLoginState()
                     }
                     is UiState.Error -> {
                         // 隐藏加载框
                         LoadingDialog.dismissLoading()
-                        
+
                         // 显示错误信息
                         toast(state.message)
-                        
+
                         Logger.e("Login failed: ${state.message}")
-                        
+
                         // 埋点统计
                         TrackManager.trackEvent("login_failed", mapOf(
                             "error" to state.message
