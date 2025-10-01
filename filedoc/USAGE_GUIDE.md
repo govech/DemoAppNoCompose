@@ -741,7 +741,7 @@ binding.refreshLayout.finishLoadMore()
 
 ## 更多资源
 
-- [README.md](README.md) - 项目说明
+- [README.md](../README.md) - 项目说明
 - [Android MVVM 开发框架需求文档.md](Android%20MVVM开发框架需求文档.md) - 需求文档
 - [官方文档](https://developer.android.com/jetpack/guide)
 
