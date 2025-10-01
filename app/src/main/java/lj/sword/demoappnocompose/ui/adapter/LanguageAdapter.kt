@@ -71,7 +71,7 @@ class LanguageAdapter(
         fun bind(languageConfig: LanguageConfig, isSelected: Boolean) {
             with(binding) {
                 // 设置语言图标
-                ivLanguageIcon.setImageResource(languageConfig.getIconRes())
+                ivLanguageIcon.setImageResource(languageConfig.language.iconRes)
                 
                 // 设置显示名称
                 tvDisplayName.text = languageConfig.getDisplayName()

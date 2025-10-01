@@ -1,5 +1,6 @@
 package lj.sword.demoappnocompose.ui.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,14 +55,19 @@ class LanguageViewModel @Inject constructor(
     private fun loadLanguageData() {
         viewModelScope.launch {
             _isLoading.value = true
+            Log.d("TAGqqqww", "loadLanguageData: start")
             
             try {
                 // 加载可用语言列表
+                Log.d("TAGqqqww", "loadLanguageData: loading available languages")
                 val languages = getAvailableLanguagesUseCase.execute()
+                Log.d("TAGqqqww", "loadLanguageData: got ${languages.size} languages")
                 _availableLanguages.value = languages
                 
                 // 获取当前语言（一次性获取，不监听）
+                Log.d("TAGqqqww", "loadLanguageData: getting current language")
                 val currentLanguage = getCurrentLanguageUseCase.getCurrentLanguage()
+                Log.d("TAGqqqww", "loadLanguageData: current language is ${currentLanguage.code}")
                 val currentLanguageConfig = LanguageConfig(language = currentLanguage, isSelected = true)
                 _currentLanguage.value = currentLanguageConfig
                 
@@ -76,8 +82,10 @@ class LanguageViewModel @Inject constructor(
                 _availableLanguages.value = updatedLanguages
                 
             } catch (e: Exception) {
+                Log.e("TAGqqqww", "loadLanguageData: error", e)
                 _languageSwitchEvent.value = LanguageSwitchEvent.Error(e.message ?: "Failed to load language data")
             } finally {
+                Log.d("TAGqqqww", "loadLanguageData: end")
                 _isLoading.value = false
             }
         }
