@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DemoAppNoCompose</string>
+    
+    <!-- 공통 -->
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
+    <string name="retry">재시도</string>
+    <string name="loading">로딩 중...</string>
+    <string name="success">성공</string>
+    <string name="failed">실패</string>
+    
+    <!-- 상태 -->
+    <string name="no_data">데이터 없음</string>
+    <string name="load_error">로드 오류</string>
+    <string name="network_error">네트워크 오류</string>
+    <string name="server_error">서버 오류</string>
+    
+    <!-- 대화상자 -->
+    <string name="dialog_title">프롬프트</string>
+    
+    <!-- 언어 선택 -->
+    <string name="language_selection">언어 선택</string>
+    <string name="language_search_hint">언어 검색</string>
+    <string name="language_confirm">확인</string>
+    <string name="language_cancel">취소</string>
+    
+    <!-- 언어 이름 -->
+    <string name="language_chinese_simplified">간체 중국어</string>
+    <string name="language_chinese_traditional">번체 중국어</string>
+    <string name="language_english">영어</string>
+    <string name="language_japanese">일본어</string>
+    <string name="language_korean">한국어</string>
+    
+    <!-- 설정 -->
+    <string name="settings">설정</string>
+    <string name="settings_language">언어</string>
+    <string name="settings_theme">테마</string>
+    
+    <!-- 로그인 -->
+    <string name="login">로그인</string>
+    <string name="login_username">사용자 이름</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_forgot_password">비밀번호를 잊으셨나요?</string>
+    <string name="login_register">회원가입</string>
+    <string name="login_wechat">위챗 로그인</string>
+    <string name="login_qq">QQ 로그인</string>
+    <string name="login_success">로그인 성공!</string>
+    <string name="login_failed">로그인 실패</string>
+    
+    <!-- 유효성 검사 -->
+    <string name="validation_username_required">사용자 이름을 입력하세요</string>
+    <string name="validation_password_required">비밀번호를 입력하세요</string>
+    <string name="validation_password_length">비밀번호는 6자 이상이어야 합니다</string>
+    
+    <!-- 기능 -->
+    <string name="feature_developing">기능 개발 중...</string>
+</resources>

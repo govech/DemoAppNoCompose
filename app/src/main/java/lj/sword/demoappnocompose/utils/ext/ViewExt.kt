@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import lj.sword.demoappnocompose.R
+import lj.sword.demoappnocompose.utils.ToastUtils
 
 /**
  * View扩展函数
@@ -86,4 +87,32 @@ fun ImageView.setThemeWarningTint() {
  */
 fun ImageView.setThemeInfoTint() {
     setColorFilter(context.getInfoColor(), PorterDuff.Mode.SRC_IN)
+}
+
+/**
+ * 显示短Toast
+ */
+fun View.toast(message: String) {
+    ToastUtils.showShort(context, message)
+}
+
+/**
+ * 显示长Toast
+ */
+fun View.toastLong(message: String) {
+    ToastUtils.showLong(context, message)
+}
+
+/**
+ * 显示短Toast（资源ID）
+ */
+fun View.toast(resId: Int) {
+    ToastUtils.showShort(context, resId)
+}
+
+/**
+ * 显示长Toast（资源ID）
+ */
+fun View.toastLong(resId: Int) {
+    ToastUtils.showLong(context, resId)
 }

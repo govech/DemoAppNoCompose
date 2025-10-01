@@ -108,127 +108,136 @@
 ## Phase 4: 字符串资源管理
 
 ### 4.1 创建多语言资源文件
-- [ ] 在 `res/` 下创建 `values/strings.xml` (默认/英文)
-- [ ] 创建 `values-zh-rCN/strings.xml` (简体中文)
-- [ ] 创建 `values-zh-rTW/strings.xml` (繁体中文)
-- [ ] 创建 `values-ja/strings.xml` (日文)
-- [ ] 创建 `values-ko/strings.xml` (韩文)
-- [ ] 根据需要添加其他语言文件夹
-- [ ] 确保每个文件夹的字符串 key 完全一致
-- [ ] 为不同语言添加对应的 strings.xml 文件
+- [x] 在 `res/` 下创建 `values/strings.xml` (默认/英文)
+- [x] 创建 `values-zh-rCN/strings.xml` (简体中文)
+- [x] 创建 `values-zh-rTW/strings.xml` (繁体中文)
+- [x] 创建 `values-ja/strings.xml` (日文)
+- [x] 创建 `values-ko/strings.xml` (韩文)
+- [x] 根据需要添加其他语言文件夹
+- [x] 确保每个文件夹的字符串 key 完全一致
+- [x] 为不同语言添加对应的 strings.xml 文件
 
 ### 4.2 整理现有字符串资源
-- [ ] 审查项目中所有硬编码的字符串
-- [ ] 列出所有需要多语言支持的文本
-- [ ] 将硬编码字符串迁移到 `strings.xml`
-- [ ] 为每个字符串定义清晰的命名规范（如：`btn_confirm`, `msg_error`）
-- [ ] 按模块或功能对字符串进行分组注释
-- [ ] 翻译所有基础字符串到各支持语言
-- [ ] 使用翻译工具或翻译服务确保质量
-- [ ] 标注需要专业翻译的特殊术语
+- [x] 审查项目中所有硬编码的字符串
+- [x] 列出所有需要多语言支持的文本
+- [x] 将硬编码字符串迁移到 `strings.xml`
+- [x] 为每个字符串定义清晰的命名规范（如：`btn_confirm`, `msg_error`）
+- [x] 按模块或功能对字符串进行分组注释
+- [x] 翻译所有基础字符串到各支持语言
+- [x] 使用翻译工具或翻译服务确保质量
+- [x] 标注需要专业翻译的特殊术语
 
 ### 4.3 创建字符串资源工具类
-- [ ] 创建 `StringResourceUtils.kt` 工具类
-- [ ] 提供全局 `getString(resId: Int)` 方法
-- [ ] 提供格式化 `getString(resId: Int, vararg args)` 方法
-- [ ] 实现复数形式字符串处理（Plurals）
-- [ ] 处理字符串数组资源
-- [ ] 添加字符串资源不存在时的降级处理
-- [ ] 提供在非 Activity/Fragment 中获取字符串的方法
-- [ ] 添加字符串缓存机制（可选优化）
+- [x] 创建 `StringResourceUtils.kt` 工具类
+- [x] 提供全局 `getString(resId: Int)` 方法
+- [x] 提供格式化 `getString(resId: Int, vararg args)` 方法
+- [x] 实现复数形式字符串处理（Plurals）
+- [x] 处理字符串数组资源
+- [x] 添加字符串资源不存在时的降级处理
+- [x] 提供在非 Activity/Fragment 中获取字符串的方法
+- [x] 添加字符串缓存机制（可选优化）
 
 ---
 
 ## Phase 5: ViewModel层集成
 
 ### 5.1 创建语言设置 ViewModel
-- [ ] 创建 `LanguageViewModel.kt` 视图模型类
-- [ ] 定义 `currentLanguage: StateFlow<LanguageConfig>` 当前语言状态
-- [ ] 定义 `availableLanguages: StateFlow<List<LanguageConfig>>` 可用语言列表
-- [ ] 定义 `isLoading: StateFlow<Boolean>` 加载状态
-- [ ] 实现 `switchLanguage(language: LanguageConfig)` 切换方法
-- [ ] 实现 `loadAvailableLanguages()` 加载语言列表方法
-- [ ] 添加语言切换成功/失败的事件通知
-- [ ] 处理语言切换过程中的异常情况
+- [x] 创建 `LanguageViewModel.kt` 视图模型类
+- [x] 定义 `currentLanguage: StateFlow<LanguageConfig>` 当前语言状态
+- [x] 定义 `availableLanguages: StateFlow<List<LanguageConfig>>` 可用语言列表
+- [x] 定义 `isLoading: StateFlow<Boolean>` 加载状态
+- [x] 实现 `switchLanguage(language: LanguageConfig)` 切换方法
+- [x] 实现 `loadAvailableLanguages()` 加载语言列表方法
+- [x] 添加语言切换成功/失败的事件通知
+- [x] 处理语言切换过程中的异常情况
 
 ### 5.2 创建 UseCase
-- [ ] 创建 `domain/usecase` 包
-- [ ] 创建 `GetCurrentLanguageUseCase` 获取当前语言用例
-- [ ] 创建 `GetAvailableLanguagesUseCase` 获取可用语言用例
-- [ ] 创建 `SwitchLanguageUseCase` 切换语言用例
-- [ ] 在 `SwitchLanguageUseCase` 中保存语言到 DataStore
-- [ ] 在 `SwitchLanguageUseCase` 中发送语言切换事件
-- [ ] 在 `SwitchLanguageUseCase` 中更新 LocaleManager 配置
-- [ ] 添加用例的单元测试
+- [x] 创建 `domain/usecase` 包
+- [x] 创建 `GetCurrentLanguageUseCase` 获取当前语言用例
+- [x] 创建 `GetAvailableLanguagesUseCase` 获取可用语言用例
+- [x] 创建 `SwitchLanguageUseCase` 切换语言用例
+- [x] 在 `SwitchLanguageUseCase` 中保存语言到 DataStore
+- [x] 在 `SwitchLanguageUseCase` 中发送语言切换事件
+- [x] 在 `SwitchLanguageUseCase` 中更新 LocaleManager 配置
+- [x] 添加用例的单元测试
 
 ---
 
 ## Phase 6: 设置页面实现
 
 ### 6.1 创建语言设置页面
-- [ ] 创建 `LanguageSettingsActivity.kt` 活动类
-- [ ] 设计布局文件 `activity_language_settings.xml`
-- [ ] 添加 Toolbar 显示"语言设置"标题
-- [ ] 添加返回按钮
-- [ ] 显示当前选中的语言（高亮显示）
-- [ ] 使用 RecyclerView 显示所有可用语言列表
-- [ ] 添加搜索框支持语言搜索（可选）
-- [ ] 绑定 LanguageViewModel
-- [ ] 监听语言列表数据变化并更新UI
-- [ ] 实现语言项点击事件处理
+- [x] 创建 `LanguageSettingsActivity.kt` 活动类
+- [x] 设计布局文件 `activity_language_settings.xml`
+- [x] 添加 Toolbar 显示"语言设置"标题
+- [x] 添加返回按钮
+- [x] 显示当前选中的语言（高亮显示）
+- [x] 使用 RecyclerView 显示所有可用语言列表
+- [x] 添加搜索框支持语言搜索（可选）
+- [x] 绑定 LanguageViewModel
+- [x] 监听语言列表数据变化并更新UI
+- [x] 实现语言项点击事件处理
 
 ### 6.2 集成到应用设置
-- [ ] 在主设置页面添加"语言 / Language"菜单项
-- [ ] 设计语言菜单项布局（图标+文字+当前语言）
-- [ ] 显示当前语言的简称或图标
-- [ ] 添加右箭头指示符
-- [ ] 点击菜单项跳转到语言设置页面
-- [ ] 确保设置项在合适的分组中（通用设置区域）
-- [ ] 适配不同屏幕尺寸的显示
+- [x] 在主设置页面添加"语言 / Language"菜单项
+- [x] 设计语言菜单项布局（图标+文字+当前语言）
+- [x] 显示当前语言的简称或图标
+- [x] 添加右箭头指示符
+- [x] 点击菜单项跳转到语言设置页面
+- [x] 确保设置项在合适的分组中（通用设置区域）
+- [x] 适配不同屏幕尺寸的显示
 
 ### 6.3 实现语言切换效果
-- [ ] 监听语言切换事件（通过 ViewModel）
-- [ ] 显示语言切换确认对话框（可选）
-- [ ] 显示"正在切换语言..."加载提示
-- [ ] 调用 Activity 的 `recreate()` 方法重建界面
-- [ ] 显示切换成功的 Toast 提示
-- [ ] 处理切换失败的情况并提示用户
-- [ ] 确保返回上一页面时语言已生效
-- [ ] 保存用户的语言选择到数据库
+- [x] 监听语言切换事件（通过 ViewModel）
+- [x] 显示语言切换确认对话框（可选）
+- [x] 显示"正在切换语言..."加载提示
+- [x] 调用 Activity 的 `recreate()` 方法重建界面
+- [x] 显示切换成功的 Toast 提示
+- [x] 处理切换失败的情况并提示用户
+- [x] 确保返回上一页面时语言已生效
+- [x] 保存用户的语言选择到数据库
+
+### 6.4 编译验证和安装验证
+- [x] 修复编译错误（R引用、toast方法等）
+- [x] 成功编译项目
+- [x] 安装到设备验证功能正常
 
 ---
 
 ## Phase 7: 实时生效机制
 
 ### 7.1 实现 Activity 重建机制
-- [ ] 定义语言切换广播常量 `ACTION_LOCALE_CHANGED`
-- [ ] 创建 `LocaleChangeBroadcastReceiver` 广播接收器
-- [ ] 在 BaseActivity 的 `onResume()` 中注册广播接收器
-- [ ] 在 BaseActivity 的 `onPause()` 中注销广播接收器
-- [ ] 接收到广播后检查语言是否真的改变
-- [ ] 调用 `recreate()` 重建当前 Activity
-- [ ] 使用 LocalBroadcastManager 避免安全问题
-- [ ] 处理 Activity 栈中多个 Activity 的刷新
+- [x] 定义语言切换广播常量 `ACTION_LOCALE_CHANGED`
+- [x] 创建 `LocaleChangeBroadcastReceiver` 广播接收器
+- [x] 在 BaseActivity 的 `onResume()` 中注册广播接收器
+- [x] 在 BaseActivity 的 `onPause()` 中注销广播接收器
+- [x] 接收到广播后检查语言是否真的改变
+- [x] 调用 `recreate()` 重建当前 Activity
+- [x] 使用 LocalBroadcastManager 避免安全问题
+- [x] 处理 Activity 栈中多个 Activity 的刷新
 
 ### 7.2 实现平滑切换动画
-- [ ] 创建淡入动画资源 `anim/fade_in.xml`
-- [ ] 创建淡出动画资源 `anim/fade_out.xml`
-- [ ] 在 `recreate()` 前调用 `overridePendingTransition()`
-- [ ] 设置进入和退出动画
-- [ ] 保存 Activity 当前状态到 Bundle
-- [ ] 在 `onCreate()` 中恢复保存的状态
-- [ ] 确保动画流畅不卡顿
-- [ ] 处理横竖屏切换时的状态保持
+- [x] 创建淡入动画资源 `anim/fade_in.xml`
+- [x] 创建淡出动画资源 `anim/fade_out.xml`
+- [x] 在 `recreate()` 前调用 `overridePendingTransition()`
+- [x] 设置进入和退出动画
+- [x] 保存 Activity 当前状态到 Bundle
+- [x] 在 `onCreate()` 中恢复保存的状态
+- [x] 确保动画流畅不卡顿
+- [x] 处理横竖屏切换时的状态保持
 
 ### 7.3 处理 Fragment 语言更新
-- [ ] 在 BaseFragment 中监听语言变化事件
-- [ ] 提供 `onLocaleChanged()` 回调方法供子类重写
-- [ ] 在语言变化时刷新 Fragment 的 UI
-- [ ] 更新 TextView、Button 等控件的文本
-- [ ] 刷新 RecyclerView Adapter 的数据
-- [ ] 重新加载图片资源（如果有语言特定图片）
-- [ ] 处理 ViewPager 中 Fragment 的刷新
-- [ ] 确保嵌套 Fragment 也能正确更新
+- [x] 在 BaseFragment 中监听语言变化事件
+- [x] 提供 `onLocaleChanged()` 回调方法供子类重写
+- [x] 在语言变化时刷新 Fragment 的 UI
+- [x] 更新 TextView、Button 等控件的文本
+- [x] 刷新 RecyclerView Adapter 的数据
+- [x] 重新加载图片资源（如果有语言特定图片）
+- [x] 处理 ViewPager 中 Fragment 的刷新
+- [x] 确保嵌套 Fragment 也能正确更新
+
+### 7.4 编译验证和安装验证
+- [x] 成功编译项目
+- [x] 安装到设备验证功能正常
 
 ---
 

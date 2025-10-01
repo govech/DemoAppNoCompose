@@ -16,4 +16,41 @@
     
     <!-- 对话框 -->
     <string name="dialog_title">提示</string>
+    
+    <!-- 语言选择 -->
+    <string name="language_selection">选择语言</string>
+    <string name="language_search_hint">搜索语言</string>
+    <string name="language_confirm">确认</string>
+    <string name="language_cancel">取消</string>
+    
+    <!-- 语言名称 -->
+    <string name="language_chinese_simplified">简体中文</string>
+    <string name="language_chinese_traditional">繁体中文</string>
+    <string name="language_english">英语</string>
+    <string name="language_japanese">日语</string>
+    <string name="language_korean">韩语</string>
+    
+    <!-- 设置 -->
+    <string name="settings">设置</string>
+    <string name="settings_language">语言</string>
+    <string name="settings_theme">主题</string>
+    
+    <!-- 登录 -->
+    <string name="login">登录</string>
+    <string name="login_username">用户名</string>
+    <string name="login_password">密码</string>
+    <string name="login_forgot_password">忘记密码？</string>
+    <string name="login_register">注册</string>
+    <string name="login_wechat">微信登录</string>
+    <string name="login_qq">QQ登录</string>
+    <string name="login_success">登录成功！</string>
+    <string name="login_failed">登录失败</string>
+    
+    <!-- 验证 -->
+    <string name="validation_username_required">请输入用户名</string>
+    <string name="validation_password_required">请输入密码</string>
+    <string name="validation_password_length">密码长度不能少于6位</string>
+    
+    <!-- 功能 -->
+    <string name="feature_developing">功能开发中...</string>
 </resources>

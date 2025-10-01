@@ -53,7 +53,7 @@ class LanguageSelectionDialog : DialogFragment() {
         setStyle(STYLE_NORMAL, android.R.style.Theme_Material_Dialog)
         
         // 获取当前语言
-        currentLanguage = arguments?.getSerializable(ARG_CURRENT_LANGUAGE) as? LanguageConfig
+        currentLanguage = arguments?.getSerializable(ARG_CURRENT_LANGUAGE, LanguageConfig::class.java) as? LanguageConfig
     }
 
     override fun onCreateView(
@@ -82,7 +82,7 @@ class LanguageSelectionDialog : DialogFragment() {
 
     private fun initViews() {
         // 设置对话框标题
-        binding.tvTitle.text = "选择语言"
+        binding.tvTitle.text = getString(lj.sword.demoappnocompose.R.string.language_selection)
     }
 
     private fun setupRecyclerView() {
@@ -110,10 +110,12 @@ class LanguageSelectionDialog : DialogFragment() {
     }
 
     private fun setupButtons() {
+        binding.btnCancel.text = getString(lj.sword.demoappnocompose.R.string.language_cancel)
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
         
+        binding.btnConfirm.text = getString(lj.sword.demoappnocompose.R.string.language_confirm)
         binding.btnConfirm.setOnClickListener {
             val selectedLanguage = languageAdapter.getSelectedLanguage()
             if (selectedLanguage != null) {

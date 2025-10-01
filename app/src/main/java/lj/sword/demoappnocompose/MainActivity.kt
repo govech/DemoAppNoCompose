@@ -1,12 +1,16 @@
 package lj.sword.demoappnocompose
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import lj.sword.demoappnocompose.base.BaseActivity
 import lj.sword.demoappnocompose.databinding.ActivityMainBinding
+import lj.sword.demoappnocompose.ui.settings.LanguageSettingsActivity
+import lj.sword.demoappnocompose.ui.settings.ThemeSettingsActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>() {
     override val bindingInflater: (LayoutInflater) -> ActivityMainBinding
@@ -15,15 +19,27 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
     }
 
     override fun initView() {
 
+    }
+
+
+
+    override fun setListeners() {
+        binding.btnLanguage.setOnClickListener {
+            startActivity(Intent(this, LanguageSettingsActivity::class.java))
+        }
+        binding.btnTheme.setOnClickListener {
+            startActivity(Intent(this, ThemeSettingsActivity::class.java))
+        }
     }
 }

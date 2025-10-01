@@ -276,8 +276,20 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      * 语言变化回调 - 子类可以重写此方法
      */
     protected open fun onLocaleChanged(language: SupportedLanguage) {
-        // 默认行为：重建 Activity
+        // 默认行为：重建 Activity 并添加动画效果
+        recreateWithAnimation()
+    }
+    
+    /**
+     * 带动画的Activity重建
+     */
+    private fun recreateWithAnimation() {
+        // 设置退出动画
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        // 重建Activity
         recreate()
+        // 设置进入动画
+        overridePendingTransition(lj.sword.demoappnocompose.R.anim.fade_in, lj.sword.demoappnocompose.R.anim.fade_out)
     }
 
     override fun onDestroy() {
