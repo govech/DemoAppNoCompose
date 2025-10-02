@@ -126,13 +126,13 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                         // 登录成功
                         toast("登录成功！")
                         
-                        val response = state.data
-                        Logger.d("Login success: userId=${response.userId}, username=${response.username}")
+                        val user = state.data
+                        Logger.d("Login success: userId=${user.id}, username=${user.username}")
                         
                         // 埋点统计
                         TrackManager.trackEvent("login_success", mapOf(
-                            "userId" to response.userId,
-                            "username" to response.username
+                            "userId" to user.id,
+                            "username" to user.username
                         ))
                         
                         // 跳转到主页（这里暂时关闭当前页面）

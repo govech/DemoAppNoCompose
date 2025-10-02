@@ -97,6 +97,17 @@ class DataStoreManager @Inject constructor(
         }
     }
 
+    /**
+     * 获取用户 ID（suspend）
+     */
+    suspend fun getUserId(): String {
+        var userId = ""
+        dataStore.data.collect { preferences ->
+            userId = preferences[KEY_USER_ID] ?: ""
+        }
+        return userId
+    }
+
     // ==================== Language ====================
     
     /**
