@@ -6,6 +6,7 @@ import dagger.hilt.android.HiltAndroidApp
 import lj.sword.demoappnocompose.BuildConfig
 import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.config.AppConfigProvider
+import lj.sword.demoappnocompose.memory.MemoryManager
 import lj.sword.demoappnocompose.monitor.PerformanceMonitor
 import javax.inject.Inject
 
@@ -25,6 +26,9 @@ class BaseApplication : Application() {
     
     @Inject
     lateinit var appConfigProvider: AppConfigProvider
+    
+    @Inject
+    lateinit var memoryManager: MemoryManager
 
     companion object {
         /**
@@ -51,6 +55,9 @@ class BaseApplication : Application() {
         
         // 初始化性能监控
         initPerformanceMonitor()
+        
+        // 初始化内存管理
+        initMemoryManager()
         
         // 初始化日志系统
         initLogger()
@@ -168,6 +175,15 @@ class BaseApplication : Application() {
     private fun initPerformanceMonitor() {
         if (::performanceMonitor.isInitialized) {
             performanceMonitor.initialize(this)
+        }
+    }
+
+    /**
+     * 初始化内存管理
+     */
+    private fun initMemoryManager() {
+        if (::memoryManager.isInitialized) {
+            memoryManager.initialize(this)
         }
     }
 

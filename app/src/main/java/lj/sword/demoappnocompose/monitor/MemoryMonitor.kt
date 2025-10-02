@@ -180,6 +180,11 @@ class MemoryMonitor @Inject constructor(
         if (pressureLevel != MemoryPressureLevel.LOW) {
             Logger.w("内存压力: $pressureLevel", TAG)
             notifyMemoryPressure(memoryInfo, pressureLevel)
+            
+            // 触发内存优化
+            if (pressureLevel == MemoryPressureLevel.HIGH || pressureLevel == MemoryPressureLevel.CRITICAL) {
+                performMemoryCleanup()
+            }
         }
 
         // 检查低内存
