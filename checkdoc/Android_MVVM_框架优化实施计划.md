@@ -133,14 +133,14 @@
   - [ ] 配置发布流程
 
 #### 10. 文档完善
-- [ ] 架构文档
-  - [ ] 创建 `ARCHITECTURE.md`
-  - [ ] 编写架构决策记录（ADR）
-  - [ ] 更新 API 文档
-- [ ] 开发文档
-  - [ ] 完善 `CONTRIBUTING.md`
-  - [ ] 创建 `CHANGELOG.md`
-  - [ ] 更新 `README.md`
+- [x] 架构文档
+  - [x] 创建 `ARCHITECTURE.md`
+  - [x] 编写架构决策记录（ADR）
+  - [x] 更新 API 文档
+- [x] 开发文档
+  - [x] 完善 `CONTRIBUTING.md`
+  - [x] 创建 `CHANGELOG.md`
+  - [x] 更新 `README.md`
 
 ## 📊 任务优先级矩阵
 
