@@ -211,4 +211,32 @@ object FileUtil {
         context.externalCacheDir?.let { size += getDirectorySize(it) }
         return size
     }
+
+    /**
+     * 获取可用存储空间（字节）
+     */
+    @JvmStatic
+    fun getAvailableStorageSpace(context: Context): Long {
+        return try {
+            val filesDir = context.filesDir
+            filesDir.usableSpace
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0L
+        }
+    }
+
+    /**
+     * 获取总存储空间（字节）
+     */
+    @JvmStatic
+    fun getTotalStorageSpace(context: Context): Long {
+        return try {
+            val filesDir = context.filesDir
+            filesDir.totalSpace
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0L
+        }
+    }
 }

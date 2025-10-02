@@ -4,17 +4,23 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import lj.sword.demoappnocompose.base.exception.AppException
+import lj.sword.demoappnocompose.base.exception.ExceptionHandler
 import lj.sword.demoappnocompose.data.model.ApiException
 import lj.sword.demoappnocompose.data.model.BaseResponse
+import javax.inject.Inject
 
 /**
  * Repository 基类
- * 提供统一的数据源切换逻辑、网络请求封装
+ * 提供统一的数据源切换逻辑、网络请求封装、异常处理
  * 
  * @author Sword
  * @since 1.0.0
  */
 abstract class BaseRepository {
+
+    @Inject
+    lateinit var exceptionHandler: ExceptionHandler
 
     /**
      * 执行网络请求（Flow）
@@ -26,23 +32,37 @@ abstract class BaseRepository {
     protected fun <T> executeRequest(
         block: suspend () -> BaseResponse<T>
     ): Flow<T> = flow {
-        val response = block()
-        
-        if (response.isSuccess()) {
-            val data = response.data
-            if (data != null) {
-                emit(data)
+        try {
+            val response = block()
+            
+            if (response.isSuccess()) {
+                val data = response.data
+                if (data != null) {
+                    emit(data)
+                } else {
+                    throw AppException.NetworkException.ParseError()
+                }
             } else {
-                throw ApiException(
-                    ApiException.CODE_PARSE_ERROR,
-                    "数据为空"
-                )
+                // 根据响应码转换为对应的异常
+                val exception = when (response.code) {
+                    401 -> AppException.BusinessException.NotLoginError()
+                    403 -> AppException.BusinessException.PermissionDeniedError()
+                    404 -> AppException.NetworkException.HttpError(404, "资源不存在")
+                    429 -> AppException.NetworkException.HttpError(429, "请求过于频繁")
+                    in 500..599 -> AppException.NetworkException.ServerError(
+                        response.message.ifEmpty { "服务器错误" },
+                        code = response.code
+                    )
+                    else -> AppException.NetworkException.HttpError(
+                        response.code,
+                        response.message.ifEmpty { "请求失败" }
+                    )
+                }
+                throw exception
             }
-        } else {
-            throw ApiException(
-                response.code,
-                response.message.ifEmpty { "请求失败" }
-            )
+        } catch (e: Exception) {
+            // 直接抛出异常，让上层处理
+            throw e
         }
     }.flowOn(Dispatchers.IO)
 
@@ -56,18 +76,31 @@ abstract class BaseRepository {
     protected suspend fun <T> executeRequestDirect(
         block: suspend () -> BaseResponse<T>
     ): T {
-        val response = block()
-        
-        return if (response.isSuccess()) {
-            response.data ?: throw ApiException(
-                ApiException.CODE_PARSE_ERROR,
-                "数据为空"
-            )
-        } else {
-            throw ApiException(
-                response.code,
-                response.message.ifEmpty { "请求失败" }
-            )
+        return try {
+            val response = block()
+            
+            if (response.isSuccess()) {
+                response.data ?: throw AppException.NetworkException.ParseError()
+            } else {
+                val exception = when (response.code) {
+                    401 -> AppException.BusinessException.NotLoginError()
+                    403 -> AppException.BusinessException.PermissionDeniedError()
+                    404 -> AppException.NetworkException.HttpError(404, "资源不存在")
+                    429 -> AppException.NetworkException.HttpError(429, "请求过于频繁")
+                    in 500..599 -> AppException.NetworkException.ServerError(
+                        response.message.ifEmpty { "服务器错误" },
+                        code = response.code
+                    )
+                    else -> AppException.NetworkException.HttpError(
+                        response.code,
+                        response.message.ifEmpty { "请求失败" }
+                    )
+                }
+                throw exception
+            }
+        } catch (e: Exception) {
+            // 直接抛出异常，让上层处理
+            throw e
         }
     }
 
@@ -80,7 +113,27 @@ abstract class BaseRepository {
     protected fun <T> executeLocal(
         block: suspend () -> T
     ): Flow<T> = flow {
-        emit(block())
+        try {
+            emit(block())
+        } catch (e: Exception) {
+            // 转换数据库异常
+            val dbException = when (e) {
+                is android.database.sqlite.SQLiteException -> {
+                    when {
+                        e.message?.contains("no such table") == true -> 
+                            AppException.DatabaseException.QueryError(e)
+                        e.message?.contains("database is locked") == true -> 
+                            AppException.DatabaseException.ConnectionError(e)
+                        e.message?.contains("UNIQUE constraint failed") == true -> 
+                            AppException.DatabaseException.InsertError(e)
+                        else -> AppException.DatabaseException.QueryError(e)
+                    }
+                }
+                else -> AppException.DatabaseException.QueryError(e)
+            }
+            
+            throw dbException
+        }
     }.flowOn(Dispatchers.IO)
 
     /**
