@@ -5,6 +5,8 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 import lj.sword.demoappnocompose.BuildConfig
 import lj.sword.demoappnocompose.config.AppConfig
+import lj.sword.demoappnocompose.monitor.PerformanceMonitor
+import javax.inject.Inject
 
 /**
  * Application 基类
@@ -16,6 +18,9 @@ import lj.sword.demoappnocompose.config.AppConfig
  */
 @HiltAndroidApp
 class BaseApplication : Application() {
+
+    @Inject
+    lateinit var performanceMonitor: PerformanceMonitor
 
     companion object {
         /**
@@ -40,6 +45,9 @@ class BaseApplication : Application() {
         // 初始化应用配置
         initAppConfig()
         
+        // 初始化性能监控
+        initPerformanceMonitor()
+        
         // 初始化日志系统
         initLogger()
         
@@ -51,6 +59,11 @@ class BaseApplication : Application() {
         
         // 初始化网络状态监听
         initNetworkMonitor()
+        
+        // 标记Application创建完成
+        if (::performanceMonitor.isInitialized) {
+            performanceMonitor.markApplicationCreated()
+        }
     }
 
     /**
@@ -138,6 +151,15 @@ class BaseApplication : Application() {
         lj.sword.demoappnocompose.manager.TrackManager.init(
             lj.sword.demoappnocompose.manager.DefaultTracker()
         )
+    }
+
+    /**
+     * 初始化性能监控
+     */
+    private fun initPerformanceMonitor() {
+        if (::performanceMonitor.isInitialized) {
+            performanceMonitor.initialize(this)
+        }
     }
 
     /**

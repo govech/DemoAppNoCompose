@@ -9,6 +9,7 @@ import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.data.remote.ApiService
 import lj.sword.demoappnocompose.data.remote.interceptor.ErrorInterceptor
 import lj.sword.demoappnocompose.data.remote.interceptor.HeaderInterceptor
+import lj.sword.demoappnocompose.monitor.NetworkPerformanceInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,13 +37,15 @@ object NetworkModule {
         appConfig: AppConfig,
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: HeaderInterceptor,
-        errorInterceptor: ErrorInterceptor
+        errorInterceptor: ErrorInterceptor,
+        networkPerformanceInterceptor: NetworkPerformanceInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(appConfig.connectTimeout, TimeUnit.SECONDS)
             .readTimeout(appConfig.readTimeout, TimeUnit.SECONDS)
             .writeTimeout(appConfig.writeTimeout, TimeUnit.SECONDS)
             .addInterceptor(headerInterceptor)
+            .addInterceptor(networkPerformanceInterceptor)
             .addInterceptor(errorInterceptor)
             .addInterceptor(loggingInterceptor)
             .retryOnConnectionFailure(true)
