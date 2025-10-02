@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -52,14 +52,15 @@ jobs:
         keyPassword: ${{ secrets.KEY_PASSWORD }}
         
     - name: Create Release
-      uses: actions/create-release@v1
+      uses: softprops/action-gh-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.get_version.outputs.VERSION }}
-        release_name: Release ${{ steps.get_version.outputs.VERSION }}
+        name: Release ${{ steps.get_version.outputs.VERSION }}
         draft: false
         prerelease: false
+        files: app/build/outputs/apk/release/app-release.apk
         body: |
           ## 更新内容
           
@@ -76,13 +77,3 @@ jobs:
           ### 技术改进
           - 代码重构
           - 依赖更新
-          
-    - name: Upload Release APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: app/build/outputs/apk/release/app-release.apk
-        asset_name: DemoApp-${{ steps.get_version.outputs.VERSION }}.apk
-        asset_content_type: application/vnd.android.package-archive

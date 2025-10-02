@@ -10,8 +10,7 @@
 | [ADR-0002](./0002-hilt-dependency-injection.md) | 选择 Hilt 作为依赖注入框架 | 已接受 | 2024-01-01 |
 | [ADR-0003](./0003-retrofit-network-framework.md) | 选择 Retrofit + OkHttp 作为网络框架 | 已接受 | 2024-01-01 |
 | [ADR-0004](./0004-room-database-choice.md) | 选择 Room 作为本地数据库 | 已接受 | 2024-01-01 |
-| [ADR-0005](./0005-exception-handling-strategy.md) | 异常处理策略设计 | 已接受 | 2024-01-01 |
-| [ADR-0006](./0006-performance-monitoring-approach.md) | 性能监控方案选择 | 已接受 | 2024-01-01 |
+| [ADR-0005](./0005-cicd-github-actions.md) | 选择 GitHub Actions 作为 CI/CD 平台 | 已接受 | 2024-01-01 |
 
 ## ADR 状态说明
 
