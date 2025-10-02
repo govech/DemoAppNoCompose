@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import lj.sword.demoappnocompose.BuildConfig
-import lj.sword.demoappnocompose.constant.NetworkConstants
+import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.data.remote.ApiService
 import lj.sword.demoappnocompose.data.remote.interceptor.ErrorInterceptor
 import lj.sword.demoappnocompose.data.remote.interceptor.HeaderInterceptor
@@ -33,14 +33,15 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
+        appConfig: AppConfig,
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: HeaderInterceptor,
         errorInterceptor: ErrorInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .connectTimeout(NetworkConstants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(NetworkConstants.READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(NetworkConstants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(appConfig.connectTimeout, TimeUnit.SECONDS)
+            .readTimeout(appConfig.readTimeout, TimeUnit.SECONDS)
+            .writeTimeout(appConfig.writeTimeout, TimeUnit.SECONDS)
             .addInterceptor(headerInterceptor)
             .addInterceptor(errorInterceptor)
             .addInterceptor(loggingInterceptor)
@@ -68,13 +69,13 @@ object NetworkModule {
 
     /**
      * 提供日志拦截器
-     * 仅在 Debug 环境下启用
+     * 根据配置决定是否启用
      */
     @Provides
     @Singleton
-    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
+    fun provideLoggingInterceptor(appConfig: AppConfig): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) {
+            level = if (appConfig.enableNetworkLog) {
                 HttpLoggingInterceptor.Level.BODY
             } else {
                 HttpLoggingInterceptor.Level.NONE
@@ -87,9 +88,9 @@ object NetworkModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(appConfig: AppConfig, okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(appConfig.baseUrl)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()

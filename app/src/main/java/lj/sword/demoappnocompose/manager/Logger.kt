@@ -2,6 +2,7 @@ package lj.sword.demoappnocompose.manager
 
 import android.util.Log
 import lj.sword.demoappnocompose.BuildConfig
+import lj.sword.demoappnocompose.config.AppConfig
 
 /**
  * 日志管理器
@@ -15,9 +16,17 @@ object Logger {
     private const val TAG = "DemoApp"
     
     /**
-     * 是否启用日志（Release 环境自动关闭）
+     * 是否启用日志
      */
     var isEnabled = BuildConfig.DEBUG
+        private set
+
+    /**
+     * 初始化日志配置
+     */
+    fun init(config: AppConfig) {
+        isEnabled = config.enableLog
+    }
 
     /**
      * Debug 级别日志

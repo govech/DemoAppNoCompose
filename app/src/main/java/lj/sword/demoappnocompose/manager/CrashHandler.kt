@@ -1,6 +1,7 @@
 package lj.sword.demoappnocompose.manager
 
 import android.content.Context
+import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.utils.DateUtil
 import lj.sword.demoappnocompose.utils.FileUtil
 import java.io.File
@@ -41,13 +42,18 @@ class CrashHandler private constructor() : Thread.UncaughtExceptionHandler {
 
     override fun uncaughtException(thread: Thread, throwable: Throwable) {
         try {
-            // 保存崩溃日志
-            saveCrashLog(throwable)
+            val config = AppConfig.getInstance()
             
-            // 记录日志
-            Logger.e("App Crashed", throwable)
-            
-            // 这里可以上报崩溃信息到服务器
+            // 根据配置决定是否收集崩溃信息
+            if (config.enableCrashCollection) {
+                // 保存崩溃日志
+                saveCrashLog(throwable)
+                
+                // 记录日志
+                Logger.e("App Crashed", throwable)
+                
+                // 这里可以上报崩溃信息到服务器
+            }
             // uploadCrashLog(throwable)
         } catch (e: Exception) {
             e.printStackTrace()

@@ -7,6 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.data.local.AppDatabase
 import lj.sword.demoappnocompose.data.local.dao.UserDao
 import javax.inject.Singleton
@@ -27,14 +28,23 @@ object DatabaseModule {
      */
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+        appConfig: AppConfig
+    ): AppDatabase {
+        val builder = Room.databaseBuilder(
             context,
             AppDatabase::class.java,
-            "app_database"
+            appConfig.databaseName
         )
             .fallbackToDestructiveMigration() // 简单情况下可以使用，生产环境建议实现 Migration
-            .build()
+        
+        // 根据配置启用WAL模式
+        if (appConfig.enableWalMode) {
+            builder.setJournalMode(androidx.room.RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
+        }
+        
+        return builder.build()
     }
 
     /**
