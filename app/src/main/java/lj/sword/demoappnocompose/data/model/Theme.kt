@@ -15,7 +15,7 @@ enum class AppTheme(
         themeId = "default",
         themeName = "默认主题",
         styleRes = R.style.DefaultTheme,
-        nightStyleRes = R.style.DefaultTheme
+        nightStyleRes = R.style.DefaultTheme  // 暂时使用相同的，因为themes.xml中夜间模式已经通过values-night处理
     ),
     BUSINESS(
         themeId = "business",

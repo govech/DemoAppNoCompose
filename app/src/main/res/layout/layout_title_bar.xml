@@ -5,7 +5,7 @@
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="56dp"
-    android:background="?attr/colorSurface"
+    android:background="?attr/colorPrimary"
     android:elevation="4dp">
 
     <!-- 返回按钮 -->
@@ -15,7 +15,7 @@
         android:layout_height="48dp"
         android:contentDescription="@string/app_name"
         android:padding="12dp"
-        android:src="@drawable/ic_launcher_foreground"
+        android:src="@drawable/ic_arrow_back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -20,6 +20,7 @@ import lj.sword.demoappnocompose.manager.LocaleManager
 import lj.sword.demoappnocompose.manager.LanguageChangeBroadcastReceiver
 import lj.sword.demoappnocompose.manager.LanguageChangeConstants
 import lj.sword.demoappnocompose.data.model.ThemeConfig
+import lj.sword.demoappnocompose.data.model.AppTheme
 import lj.sword.demoappnocompose.data.model.SupportedLanguage
 import lj.sword.demoappnocompose.data.model.LanguageConfig
 import lj.sword.demoappnocompose.utils.ContextUtils
@@ -75,8 +76,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     private var currentLanguageConfig: LanguageConfig? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 在super.onCreate之前应用主题和语言
-        applyTheme()
+        // 在super.onCreate之前同步应用主题
+        applyThemeSync()
         super.onCreate(savedInstanceState)
 
         // 使用扩展函数自动创建 ViewBinding（无反射）
@@ -89,7 +90,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         initData()
         setListeners()
         observeViewModel()
-        // 主题监听已合并到 applyTheme() 方法中
+        // 启动主题监听
+        observeThemeChanges()
         observeLanguageChanges() // 重新启用语言变化监听
     }
 
@@ -171,9 +173,46 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     }
 
     /**
-     * 应用主题并观察主题变化
+     * 同步应用主题（在onCreate之前）
      */
-    private fun applyTheme() {
+    private fun applyThemeSync() {
+        try {
+            // 从Intent中获取主题信息（如果有的话）
+            val themeId = intent?.getStringExtra("theme_id") ?: "default"
+            val isDarkMode = intent?.getBooleanExtra("is_dark_mode", false) ?: false
+            val followSystem = intent?.getBooleanExtra("follow_system", true) ?: true
+            
+            // 创建主题配置
+            val theme = AppTheme.fromThemeId(themeId)
+            val finalIsDarkMode = if (followSystem && ::themeManager.isInitialized) {
+                themeManager.isSystemDarkMode(this)
+            } else {
+                isDarkMode
+            }
+            
+            // 选择主题资源
+            val themeRes = if (finalIsDarkMode) {
+                theme.nightStyleRes
+            } else {
+                theme.styleRes
+            }
+            
+            android.util.Log.d("BaseActivity", "Applying theme sync: ${theme.themeName}, isDark: $finalIsDarkMode, themeRes: $themeRes")
+            setTheme(themeRes)
+            
+            // 保存当前配置
+            currentThemeConfig = ThemeConfig(theme, finalIsDarkMode, followSystem)
+            
+        } catch (e: Exception) {
+            android.util.Log.e("BaseActivity", "Failed to apply theme sync", e)
+            setTheme(lj.sword.demoappnocompose.R.style.DefaultTheme)
+        }
+    }
+
+    /**
+     * 观察主题变化并重建Activity
+     */
+    private fun observeThemeChanges() {
         if (!::themeManager.isInitialized) {
             return
         }
@@ -181,24 +220,39 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 themeManager.getCurrentThemeConfig().collect { themeConfig ->
-                    // 如果主题配置发生变化，重新应用主题
-                    if (currentThemeConfig != themeConfig) {
-                        currentThemeConfig = themeConfig
+                    // 判断是否跟随系统
+                    val isDarkMode = if (themeConfig.followSystem) {
+                        themeManager.isSystemDarkMode(this@BaseActivity)
+                    } else {
+                        themeConfig.isDarkMode
+                    }
+                    
+                    val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
+                    
+                    // 检查是否需要应用主题
+                    val needsThemeChange = currentThemeConfig == null || currentThemeConfig != finalThemeConfig
+                    
+                    if (needsThemeChange) {
+                        android.util.Log.d("BaseActivity", "Theme config: ${finalThemeConfig.currentTheme.themeName}, dark: ${finalThemeConfig.isDarkMode}")
                         
-                        // 判断是否跟随系统
-                        val isDarkMode = if (themeConfig.followSystem) {
-                            themeManager.isSystemDarkMode(this@BaseActivity)
+                        // 如果是首次加载且不是默认主题，需要重建Activity
+                        val isFirstTime = currentThemeConfig == null
+                        val isDefaultTheme = finalThemeConfig.currentTheme == AppTheme.DEFAULT && !finalThemeConfig.isDarkMode
+                        
+                        // 更新当前主题配置
+                        currentThemeConfig = finalThemeConfig
+                        
+                        if (isFirstTime && !isDefaultTheme) {
+                            // 首次加载但不是默认主题，需要重建
+                            android.util.Log.d("BaseActivity", "First time with non-default theme, recreating activity")
+                            recreateWithTheme(finalThemeConfig)
+                        } else if (!isFirstTime) {
+                            // 主题发生变化，重建Activity
+                            android.util.Log.d("BaseActivity", "Theme changed, recreating activity")
+                            recreateWithTheme(finalThemeConfig)
                         } else {
-                            themeConfig.isDarkMode
-                        }
-                        
-                        // 应用主题
-                        val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
-                        themeManager.applyTheme(this@BaseActivity, finalThemeConfig)
-                        
-                        // 只有在主题真的发生变化时才重建 Activity
-                        if (currentThemeConfig != null) {
-                            recreate()
+                            // 首次加载且是默认主题，不需要重建
+                            android.util.Log.d("BaseActivity", "First time with default theme, no recreation needed")
                         }
                     }
                 }
@@ -330,6 +384,19 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         recreateWithAnimation()
     }
     
+    /**
+     * 带主题信息的Activity重建
+     */
+    private fun recreateWithTheme(themeConfig: ThemeConfig) {
+        // 将主题信息保存到Intent中，以便重建后的Activity能够同步获取
+        intent.putExtra("theme_id", themeConfig.currentTheme.themeId)
+        intent.putExtra("is_dark_mode", themeConfig.isDarkMode)
+        intent.putExtra("follow_system", themeConfig.followSystem)
+        
+        // 重建Activity
+        recreate()
+    }
+
     /**
      * 带动画的Activity重建
      */

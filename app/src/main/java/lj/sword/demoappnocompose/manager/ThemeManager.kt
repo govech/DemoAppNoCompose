@@ -71,6 +71,7 @@ class ThemeManager @Inject constructor(
             themeConfig.currentTheme.styleRes
         }
         
+        android.util.Log.d("ThemeManager", "Applying theme: ${themeConfig.currentTheme.themeName}, isDark: ${themeConfig.isDarkMode}, themeRes: $themeRes")
         activity.setTheme(themeRes)
     }
     

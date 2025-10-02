@@ -28,9 +28,10 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
     @Inject
     lateinit var injectedThemeManager: ThemeManager
 
+    // 添加标志位防止无限循环
+    private var isUpdatingUI = false
+
     override fun initView() {
-        // 初始化BaseActivity的themeManager
-        super.themeManager = injectedThemeManager
         setupToolbar()
         setupThemeSelection()
         setupDarkModeSwitch()
@@ -42,6 +43,10 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
     }
 
     private fun setupToolbar() {
+        binding.titleBar.tvTitle.text = getString(R.string.settings_theme)
+        binding.titleBar.apply {
+            this.ivBack.setOnClickListener { finish() }
+        }
         binding.titleBar.apply {
             setTitle("主题设置")
             // TitleBar默认就有返回按钮的点击事件，会调用finish()
@@ -50,12 +55,19 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
 
     private fun setupThemeSelection() {
         binding.radioGroupTheme.setOnCheckedChangeListener { _, checkedId ->
+            // 如果正在更新UI，忽略这次事件
+            if (isUpdatingUI) {
+                android.util.Log.d("ThemeSettings", "Ignoring theme selection change (updating UI)")
+                return@setOnCheckedChangeListener
+            }
+            
             val theme = when (checkedId) {
                 R.id.rbDefault -> AppTheme.DEFAULT
                 R.id.rbBusiness -> AppTheme.BUSINESS
                 R.id.rbVibrant -> AppTheme.VIBRANT
                 else -> AppTheme.DEFAULT
             }
+            android.util.Log.d("ThemeSettings", "User selected theme: ${theme.themeName}")
             lifecycleScope.launch {
                 settingsViewModel.switchTheme(theme)
             }
@@ -64,6 +76,9 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
 
     private fun setupDarkModeSwitch() {
         binding.switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
+            // 如果正在更新UI，忽略这次事件
+            if (isUpdatingUI) return@setOnCheckedChangeListener
+            
             lifecycleScope.launch {
                 settingsViewModel.switchDarkMode(isChecked)
             }
@@ -72,6 +87,9 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
 
     private fun setupFollowSystemSwitch() {
         binding.switchFollowSystem.setOnCheckedChangeListener { _, isChecked ->
+            // 如果正在更新UI，忽略这次事件
+            if (isUpdatingUI) return@setOnCheckedChangeListener
+            
             lifecycleScope.launch {
                 settingsViewModel.setFollowSystem(isChecked)
             }
@@ -81,10 +99,23 @@ class ThemeSettingsActivity : BaseActivity<ActivityThemeSettingsBinding>() {
     private fun observeThemeConfig() {
         lifecycleScope.launch {
             settingsViewModel.themeConfig.collect { themeConfig ->
-                updateThemeSelection(themeConfig.currentTheme)
-                updateDarkModeSwitch(themeConfig.isDarkMode)
-                updateFollowSystemSwitch(themeConfig.followSystem)
+                updateUI(themeConfig)
             }
+        }
+    }
+
+    /**
+     * 统一更新UI，使用标志位防止无限循环
+     */
+    private fun updateUI(themeConfig: ThemeConfig) {
+        android.util.Log.d("ThemeSettings", "Updating UI: theme=${themeConfig.currentTheme.themeName}, dark=${themeConfig.isDarkMode}, followSystem=${themeConfig.followSystem}")
+        isUpdatingUI = true
+        try {
+            updateThemeSelection(themeConfig.currentTheme)
+            updateDarkModeSwitch(themeConfig.isDarkMode)
+            updateFollowSystemSwitch(themeConfig.followSystem)
+        } finally {
+            isUpdatingUI = false
         }
     }
 
