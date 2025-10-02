@@ -120,7 +120,10 @@ fun String.limit(maxLength: Int): String
 fun View.visible()
 fun View.gone()
 fun View.onSingleClick { }
-```#
+```
+
+#
+
 ## 4. 现代化技术栈 ⭐⭐⭐⭐⭐
 
 #### 协程和 Flow
@@ -244,6 +247,7 @@ class LoginUseCase @Inject constructor(
 ```
 
 #### 2. 完善异常恢复机制
+
 **问题**: 异常处理缺少分类和自动恢复策略
 
 **解决方案**:
@@ -444,8 +448,9 @@ interface UserDao {
     
     data class UserNameOnly(val id: String, val name: String)
 }
-```###
- 💡 低优先级改进（建议长期规划）
+```
+
+### 💡 低优先级改进（建议长期规划）
 
 #### 7. 测试覆盖
 - **单元测试**: ViewModel、Repository、工具类的测试覆盖
