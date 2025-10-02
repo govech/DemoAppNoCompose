@@ -13,7 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewbinding.ViewBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import lj.sword.demoappnocompose.manager.ThemeManager
 import lj.sword.demoappnocompose.manager.LocaleManager
@@ -177,35 +176,36 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
      */
     private fun applyThemeSync() {
         try {
-            // 从Intent中获取主题信息（如果有的话）
-            val themeId = intent?.getStringExtra("theme_id") ?: "default"
-            val isDarkMode = intent?.getBooleanExtra("is_dark_mode", false) ?: false
-            val followSystem = intent?.getBooleanExtra("follow_system", true) ?: true
+            // 检查是否有Intent传递的主题信息（Activity重建时）
+            val hasIntentTheme = intent?.hasExtra("theme_id") == true
             
-            // 创建主题配置
-            val theme = AppTheme.fromThemeId(themeId)
-            val finalIsDarkMode = if (followSystem && ::themeManager.isInitialized) {
-                themeManager.isSystemDarkMode(this)
+            if (hasIntentTheme) {
+                // 从Intent中获取主题信息（Activity重建时）
+                val themeId = intent.getStringExtra("theme_id") ?: "default"
+                val isDarkMode = intent.getBooleanExtra("is_dark_mode", false)
+                val followSystem = intent.getBooleanExtra("follow_system", true)
+                
+                val theme = AppTheme.fromThemeId(themeId)
+                val finalIsDarkMode = if (followSystem && ::themeManager.isInitialized) {
+                    themeManager.isSystemDarkMode(this)
+                } else {
+                    isDarkMode
+                }
+                
+                // 只设置主题样式，夜间模式由Application统一管理
+                setTheme(theme.styleRes)
+                currentThemeConfig = ThemeConfig(theme, finalIsDarkMode, followSystem)
+                
+                android.util.Log.d("BaseActivity", "Applying theme from Intent: ${theme.themeName}, isDark: $finalIsDarkMode, followSystem: $followSystem")
             } else {
-                isDarkMode
+                // 首次启动，使用默认主题，让observeThemeChanges处理真实的DataStore数据
+                setTheme(R.style.DefaultTheme)
+                android.util.Log.d("BaseActivity", "First launch, using default theme, will be updated by DataStore")
             }
-            
-            // 选择主题资源
-            val themeRes = if (finalIsDarkMode) {
-                theme.nightStyleRes
-            } else {
-                theme.styleRes
-            }
-            
-            android.util.Log.d("BaseActivity", "Applying theme sync: ${theme.themeName}, isDark: $finalIsDarkMode, themeRes: $themeRes")
-            setTheme(themeRes)
-            
-            // 保存当前配置
-            currentThemeConfig = ThemeConfig(theme, finalIsDarkMode, followSystem)
             
         } catch (e: Exception) {
             android.util.Log.e("BaseActivity", "Failed to apply theme sync", e)
-            setTheme(lj.sword.demoappnocompose.R.style.DefaultTheme)
+            setTheme(R.style.DefaultTheme)
         }
     }
 
@@ -220,39 +220,58 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 themeManager.getCurrentThemeConfig().collect { themeConfig ->
-                    // 判断是否跟随系统
-                    val isDarkMode = if (themeConfig.followSystem) {
+                    // 判断最终的暗黑模式状态
+                    val finalIsDarkMode = if (themeConfig.followSystem) {
                         themeManager.isSystemDarkMode(this@BaseActivity)
                     } else {
                         themeConfig.isDarkMode
                     }
                     
-                    val finalThemeConfig = themeConfig.copy(isDarkMode = isDarkMode)
+                    val finalThemeConfig = themeConfig.copy(isDarkMode = finalIsDarkMode)
                     
                     // 检查是否需要应用主题
                     val needsThemeChange = currentThemeConfig == null || currentThemeConfig != finalThemeConfig
                     
                     if (needsThemeChange) {
-                        android.util.Log.d("BaseActivity", "Theme config: ${finalThemeConfig.currentTheme.themeName}, dark: ${finalThemeConfig.isDarkMode}")
+                        android.util.Log.d("BaseActivity", "Theme config changed: ${finalThemeConfig.currentTheme.themeName}, dark: ${finalThemeConfig.isDarkMode}, followSystem: ${finalThemeConfig.followSystem}")
                         
-                        // 如果是首次加载且不是默认主题，需要重建Activity
                         val isFirstTime = currentThemeConfig == null
-                        val isDefaultTheme = finalThemeConfig.currentTheme == AppTheme.DEFAULT && !finalThemeConfig.isDarkMode
+                        val oldThemeConfig = currentThemeConfig
                         
                         // 更新当前主题配置
                         currentThemeConfig = finalThemeConfig
                         
-                        if (isFirstTime && !isDefaultTheme) {
-                            // 首次加载但不是默认主题，需要重建
-                            android.util.Log.d("BaseActivity", "First time with non-default theme, recreating activity")
-                            recreateWithTheme(finalThemeConfig)
-                        } else if (!isFirstTime) {
-                            // 主题发生变化，重建Activity
-                            android.util.Log.d("BaseActivity", "Theme changed, recreating activity")
-                            recreateWithTheme(finalThemeConfig)
+                        // 检查是否只是夜间模式变化
+                        val onlyNightModeChanged = oldThemeConfig != null && 
+                            oldThemeConfig.currentTheme == finalThemeConfig.currentTheme &&
+                            (oldThemeConfig.isDarkMode != finalThemeConfig.isDarkMode || 
+                             oldThemeConfig.followSystem != finalThemeConfig.followSystem)
+                        
+                        if (onlyNightModeChanged) {
+                            // 只是夜间模式变化，Application会处理夜间模式，Activity不需要重建
+                            android.util.Log.d("BaseActivity", "Only night mode changed, no recreation needed")
+                        } else if (isFirstTime) {
+                            // 首次加载，检查是否需要重建
+                            val isDefaultTheme = finalThemeConfig.currentTheme == AppTheme.DEFAULT
+                            
+                            if (isDefaultTheme) {
+                                // 是默认主题，不需要重建
+                                android.util.Log.d("BaseActivity", "First time with default theme, no recreation needed")
+                            } else {
+                                // 不是默认主题，需要重建
+                                android.util.Log.d("BaseActivity", "First time with non-default theme, recreating")
+                                lifecycleScope.launch {
+                                    kotlinx.coroutines.delay(100)
+                                    recreateWithTheme(finalThemeConfig)
+                                }
+                            }
                         } else {
-                            // 首次加载且是默认主题，不需要重建
-                            android.util.Log.d("BaseActivity", "First time with default theme, no recreation needed")
+                            // 主题变化，需要重建
+                            android.util.Log.d("BaseActivity", "Theme changed, recreating with theme")
+                            lifecycleScope.launch {
+                                kotlinx.coroutines.delay(100)
+                                recreateWithTheme(finalThemeConfig)
+                            }
                         }
                     }
                 }

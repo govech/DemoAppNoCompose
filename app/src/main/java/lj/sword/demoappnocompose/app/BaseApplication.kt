@@ -25,6 +25,9 @@ class BaseApplication : Application() {
     @Inject
     lateinit var localeManager: LocaleManager
 
+    @Inject
+    lateinit var themeManager: lj.sword.demoappnocompose.manager.ThemeManager
+
     /** 应用级别的协程作用域 */
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -50,6 +53,9 @@ class BaseApplication : Application() {
         
         // 初始化语言设置（必须在其他初始化之前）
         initLanguage()
+        
+        // 初始化主题设置
+        initTheme()
         
         // 初始化日志系统
         initLogger()
@@ -106,6 +112,34 @@ class BaseApplication : Application() {
                 lj.sword.demoappnocompose.manager.Logger.d("Language initialized successfully")
             } catch (e: Exception) {
                 lj.sword.demoappnocompose.manager.Logger.e("Failed to initialize language", e)
+            }
+        }
+    }
+
+    /**
+     * 初始化主题设置
+     */
+    private fun initTheme() {
+        applicationScope.launch {
+            try {
+                themeManager.getCurrentThemeConfig().collect { themeConfig ->
+                    val finalIsDarkMode = if (themeConfig.followSystem) {
+                        themeManager.isSystemDarkMode(this@BaseApplication)
+                    } else {
+                        themeConfig.isDarkMode
+                    }
+                    
+                    val nightMode = when {
+                        themeConfig.followSystem -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                        finalIsDarkMode -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+                        else -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
+                    }
+                    
+                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(nightMode)
+                    lj.sword.demoappnocompose.manager.Logger.d("Theme initialized: nightMode=$nightMode")
+                }
+            } catch (e: Exception) {
+                lj.sword.demoappnocompose.manager.Logger.e("Failed to initialize theme", e)
             }
         }
     }
