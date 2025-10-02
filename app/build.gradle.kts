@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.4"
 }
 
 android {
@@ -141,4 +143,63 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+// 代码质量工具配置
+
+// ktlint 配置
+ktlint {
+    version.set("1.0.1")
+    debug.set(true)
+    verbose.set(true)
+    android.set(true)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(false)
+    
+    reporters {
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
+        reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
+    }
+    
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}
+
+// detekt 配置
+detekt {
+    toolVersion = "1.23.4"
+    config.setFrom(file("../config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    allRules = false
+    
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
+        md.required.set(true)
+    }
+}
+
+// 自定义任务：代码质量检查
+tasks.register("codeQualityCheck") {
+    dependsOn("ktlintCheck", "detekt", "lint")
+    group = "verification"
+    description = "运行所有代码质量检查"
+}
+
+// 自定义任务：代码格式化
+tasks.register("codeFormat") {
+    dependsOn("ktlintFormat")
+    group = "formatting"
+    description = "格式化所有Kotlin代码"
+}
+
+// 在build之前运行代码质量检查
+tasks.named("build") {
+    dependsOn("codeQualityCheck")
 }
