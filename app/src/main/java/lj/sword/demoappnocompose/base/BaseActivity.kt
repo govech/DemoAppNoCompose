@@ -2,6 +2,7 @@ package lj.sword.demoappnocompose.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -12,14 +13,12 @@ import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.launch
 
 
-
 /**
  * 无反射的 ViewBinding 扩展函数
  */
 fun <VB : ViewBinding> AppCompatActivity.inflateBinding(
     inflater: (LayoutInflater) -> VB
 ): VB = inflater(layoutInflater)
-
 
 
 /**
@@ -44,13 +43,16 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     /** 是否第一次加载 */
     private var isFirstLoad = true
 
+
+    private var isSetContentView = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // 使用扩展函数自动创建 ViewBinding（无反射）
         binding = inflateBinding(bindingInflater)
         setContentView(binding.root)
-
+        isSetContentView = true
         // 初始化流程
         initStatusBar()
         initView()
@@ -104,6 +106,20 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         if (isFirstLoad) {
             lazyLoad()
             isFirstLoad = false
+        }
+    }
+
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+        if (isSetContentView) {
+            throw IllegalStateException("setContentView(layoutResID) 只能调用一次,已经在BaseActivity中调用，请不要重复调用")
+        }
+    }
+
+    override fun setContentView(view: View?) {
+        super.setContentView(view)
+        if (isSetContentView) {
+            throw IllegalStateException("setContentView(view) 只能调用一次,已经在BaseActivity中调用，请不要重复调用")
         }
     }
 }
