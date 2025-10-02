@@ -3,13 +3,7 @@ package lj.sword.demoappnocompose.app
 import android.app.Application
 import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 import lj.sword.demoappnocompose.BuildConfig
-import lj.sword.demoappnocompose.manager.LocaleManager
-import javax.inject.Inject
 
 /**
  * Application 基类
@@ -21,15 +15,6 @@ import javax.inject.Inject
  */
 @HiltAndroidApp
 class BaseApplication : Application() {
-
-    @Inject
-    lateinit var localeManager: LocaleManager
-
-    @Inject
-    lateinit var themeManager: lj.sword.demoappnocompose.manager.ThemeManager
-
-    /** 应用级别的协程作用域 */
-    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     companion object {
         /**
@@ -50,12 +35,6 @@ class BaseApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        
-        // 初始化语言设置（必须在其他初始化之前）
-        initLanguage()
-        
-        // 初始化主题设置
-        initTheme()
         
         // 初始化日志系统
         initLogger()
@@ -100,54 +79,5 @@ class BaseApplication : Application() {
     private fun initNetworkMonitor() {
         // 可选：监听网络状态变化
         // NetworkUtil.registerNetworkCallback(this, onAvailable = {}, onLost = {})
-    }
-
-    /**
-     * 初始化语言设置
-     */
-    private fun initLanguage() {
-        applicationScope.launch {
-            try {
-                localeManager.initializeLanguage()
-                lj.sword.demoappnocompose.manager.Logger.d("Language initialized successfully")
-            } catch (e: Exception) {
-                lj.sword.demoappnocompose.manager.Logger.e("Failed to initialize language", e)
-            }
-        }
-    }
-
-    /**
-     * 初始化主题设置
-     */
-    private fun initTheme() {
-        applicationScope.launch {
-            try {
-                themeManager.getCurrentThemeConfig().collect { themeConfig ->
-                    val finalIsDarkMode = if (themeConfig.followSystem) {
-                        themeManager.isSystemDarkMode(this@BaseApplication)
-                    } else {
-                        themeConfig.isDarkMode
-                    }
-                    
-                    val nightMode = when {
-                        themeConfig.followSystem -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
-                        finalIsDarkMode -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
-                        else -> androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
-                    }
-                    
-                    androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(nightMode)
-                    lj.sword.demoappnocompose.manager.Logger.d("Theme initialized: nightMode=$nightMode")
-                }
-            } catch (e: Exception) {
-                lj.sword.demoappnocompose.manager.Logger.e("Failed to initialize theme", e)
-            }
-        }
-    }
-
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(base)
-        // 在 attachBaseContext 中应用语言配置
-        // 注意：这里不能使用 Hilt 注入，因为 Hilt 还没有初始化
-        // 语言配置会在 onCreate 中通过 LocaleManager 处理
     }
 }

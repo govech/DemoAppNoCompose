@@ -9,7 +9,6 @@ import lj.sword.demoappnocompose.constant.NetworkConstants
 import lj.sword.demoappnocompose.data.remote.ApiService
 import lj.sword.demoappnocompose.data.remote.interceptor.ErrorInterceptor
 import lj.sword.demoappnocompose.data.remote.interceptor.HeaderInterceptor
-import lj.sword.demoappnocompose.network.LanguageInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,14 +35,12 @@ object NetworkModule {
     fun provideOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: HeaderInterceptor,
-        errorInterceptor: ErrorInterceptor,
-        languageInterceptor: LanguageInterceptor
+        errorInterceptor: ErrorInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(NetworkConstants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(NetworkConstants.READ_TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(NetworkConstants.WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .addInterceptor(languageInterceptor)
             .addInterceptor(headerInterceptor)
             .addInterceptor(errorInterceptor)
             .addInterceptor(loggingInterceptor)

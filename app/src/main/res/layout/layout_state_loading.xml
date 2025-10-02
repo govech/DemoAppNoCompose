@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="加载中..."
-        android:textColor="?attr/textColorSecondary"
+        android:textColor="#999999"
         android:textSize="14sp" />
 
 </LinearLayout>

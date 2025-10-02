@@ -96,7 +96,6 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
 
     // Lifecycle & ViewModel
     implementation(libs.androidx.lifecycle.runtime.ktx)

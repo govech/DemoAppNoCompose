@@ -57,14 +57,3 @@ class LoginViewModel @Inject constructor(
         _loginResult.value = UiState.Empty()
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -30,14 +30,3 @@ data class LoginResponse(
     @SerializedName("email")
     val email: String? = null
 )
-
-
-
-
-
-
-
-
-
-
-

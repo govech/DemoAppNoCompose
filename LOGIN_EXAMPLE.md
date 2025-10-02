@@ -319,8 +319,8 @@ D/DemoApp: [Track] Event: login_success, params: {userId=1001, username=admin}
 
 ## 📚 相关文档
 
-- [USAGE_GUIDE.md](../USAGE_GUIDE.md) - 框架使用指南
-- [README.md](../../README.md) - 项目说明文档
+- [USAGE_GUIDE.md](USAGE_GUIDE.md) - 框架使用指南
+- [README.md](README.md) - 项目说明文档
 
 ---
 

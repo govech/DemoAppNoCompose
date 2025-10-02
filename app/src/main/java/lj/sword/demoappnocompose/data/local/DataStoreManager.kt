@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -62,9 +61,11 @@ class DataStoreManager @Inject constructor(
      * 获取 Token（suspend）
      */
     suspend fun getToken(): String {
-        return dataStore.data.map { preferences ->
-            preferences[KEY_TOKEN] ?: ""
-        }.first()
+        var token = ""
+        dataStore.data.collect { preferences ->
+            token = preferences[KEY_TOKEN] ?: ""
+        }
+        return token
     }
 
     /**
@@ -113,24 +114,6 @@ class DataStoreManager @Inject constructor(
     fun getLanguageFlow(): Flow<String> {
         return dataStore.data.map { preferences ->
             preferences[KEY_LANGUAGE] ?: DEFAULT_LANGUAGE
-        }
-    }
-
-    /**
-     * 获取语言设置（suspend）
-     */
-    suspend fun getLanguage(): String {
-        return dataStore.data.map { preferences ->
-            preferences[KEY_LANGUAGE] ?: DEFAULT_LANGUAGE
-        }.first()
-    }
-
-    /**
-     * 清除语言设置
-     */
-    suspend fun clearLanguage() {
-        dataStore.edit { preferences ->
-            preferences.remove(KEY_LANGUAGE)
         }
     }
 

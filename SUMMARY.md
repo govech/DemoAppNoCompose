@@ -361,8 +361,8 @@ cd DemoAppNoCompose
 ## 📚 学习路径
 
 ### 初学者
-1. 阅读 [README.md](../README.md) 了解项目结构
-2. 查看 [LOGIN_EXAMPLE.md](login/LOGIN_EXAMPLE.md) 学习如何使用框架
+1. 阅读 [README.md](README.md) 了解项目结构
+2. 查看 [LOGIN_EXAMPLE.md](LOGIN_EXAMPLE.md) 学习如何使用框架
 3. 运行登录示例，理解 MVVM 架构
 
 ### 进阶开发者
@@ -453,14 +453,3 @@ Sword
 ---
 
 **🎉 感谢使用本框架！祝你开发愉快！** 🚀
-
-
-
-
-
-
-
-
-
-
-
