@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import lj.sword.demoappnocompose.config.AppConfig
+import lj.sword.demoappnocompose.config.AppConfigProvider
 import javax.inject.Singleton
 
 /**
@@ -21,11 +22,20 @@ import javax.inject.Singleton
 object ConfigModule {
 
     /**
+     * 提供应用配置提供者
+     */
+    @Provides
+    @Singleton
+    fun provideAppConfigProvider(@ApplicationContext context: Context): AppConfigProvider {
+        return AppConfigProvider(context)
+    }
+
+    /**
      * 提供应用配置实例
      */
     @Provides
     @Singleton
-    fun provideAppConfig(@ApplicationContext context: Context): AppConfig {
-        return AppConfig.getInstance()
+    fun provideAppConfig(provider: AppConfigProvider): AppConfig {
+        return provider.getConfig()
     }
 }

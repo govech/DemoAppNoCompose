@@ -5,6 +5,7 @@ import android.content.Context
 import dagger.hilt.android.HiltAndroidApp
 import lj.sword.demoappnocompose.BuildConfig
 import lj.sword.demoappnocompose.config.AppConfig
+import lj.sword.demoappnocompose.config.AppConfigProvider
 import lj.sword.demoappnocompose.monitor.PerformanceMonitor
 import javax.inject.Inject
 
@@ -21,6 +22,9 @@ class BaseApplication : Application() {
 
     @Inject
     lateinit var performanceMonitor: PerformanceMonitor
+    
+    @Inject
+    lateinit var appConfigProvider: AppConfigProvider
 
     companion object {
         /**
@@ -70,7 +74,7 @@ class BaseApplication : Application() {
      * 初始化应用配置
      */
     private fun initAppConfig() {
-        AppConfig.init(this) {
+        val config = AppConfig.init(this) {
             // 网络配置
             network {
                 baseUrl = BuildConfig.BASE_URL
@@ -125,6 +129,11 @@ class BaseApplication : Application() {
                 enableObfuscation = !BuildConfig.DEBUG
                 encryptionKey = "demo_app_encryption_key_2024"
             }
+        }
+        
+        // 更新AppConfigProvider中的配置
+        if (::appConfigProvider.isInitialized) {
+            appConfigProvider.setConfig(config)
         }
     }
 
