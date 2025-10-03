@@ -64,7 +64,7 @@ complexity:
     threshold: 10
     includeStaticDeclarations: false
     includePrivateDeclarations: false
-  ComplexMethod:
+  CyclomaticComplexMethod:
     active: true
     threshold: 15
     ignoreSingleWhenExpression: false
@@ -76,10 +76,10 @@ complexity:
     ignoredLabels: []
   LargeClass:
     active: true
-    threshold: 600
+    threshold: 400
   LongMethod:
     active: true
-    threshold: 60
+    threshold: 40
   LongParameterList:
     active: true
     functionThreshold: 6
@@ -117,7 +117,7 @@ complexity:
 coroutines:
   active: true
   GlobalCoroutineUsage:
-    active: false
+    active: true
   InjectDispatcher:
     active: true
     dispatcherNames: [IO, Default, Unconfined]
@@ -224,8 +224,9 @@ exceptions:
       - Error
       - Exception
       - Throwable
-      - RuntimeExceptionform
-atting:
+      - RuntimeException
+
+formatting:
   active: true
   android: true
   autoCorrect: true
@@ -581,7 +582,8 @@ style:
     active: true
     ignoreOverridableFunction: true
     ignoreActualFunction: true
-    excludedFunctions: 'describeContents'
+    excludedFunctions:
+      - describeContents
     excludeAnnotatedFunction: ['dagger.Provides']
   LibraryCodeMustSpecifyReturnType:
     active: true
@@ -615,11 +617,7 @@ style:
   MandatoryBracesLoops:
     active: false
   MaxLineLength:
-    active: true
-    maxLineLength: 120
-    excludePackageStatements: true
-    excludeImportStatements: true
-    excludeCommentStatements: false
+    active: false
   MayBeConst:
     active: true
   ModifierOrder:
@@ -647,7 +645,8 @@ style:
   ReturnCount:
     active: true
     max: 2
-    excludedFunctions: 'equals'
+    excludedFunctions:
+      - equals
     excludeLabeled: false
     excludeReturnFromLambda: true
     excludeGuardClauses: false
