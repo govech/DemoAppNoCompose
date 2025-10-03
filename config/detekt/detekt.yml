@@ -352,9 +352,9 @@ atting:
     autoCorrect: true
   StringTemplate:
     active: true
-    autoCorrect: truenaming:
-  
-active: true
+    autoCorrect: true
+naming:
+  active: true
   ClassNaming:
     active: true
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/jsTest/**', '**/iosTest/**']
