@@ -152,6 +152,8 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    detektPlugins(libs.detekt.formatting)
 }
 
 // 代码质量工具配置
@@ -180,11 +182,14 @@ ktlint {
 
 // detekt 配置
 detekt {
-    toolVersion = "1.23.4"
+    toolVersion = libs.versions.detektFormatting.get()
     config.setFrom(file("${rootProject.projectDir}/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
     allRules = false
-    
+
+    source = files(
+        "src/main/java"
+    )
     reports {
         html.required.set(true)
         xml.required.set(true)

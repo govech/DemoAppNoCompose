@@ -1,6 +1,7 @@
 [versions]
 # Android & Kotlin
 agp = "8.10.1"
+detektFormatting = "1.23.8"
 kotlin = "2.0.21"
 ksp = "2.0.21-1.0.28"
 
@@ -51,6 +52,7 @@ coroutinesTest = "1.9.0"
 # AndroidX Core
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
