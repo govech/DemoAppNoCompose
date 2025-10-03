@@ -1,5 +1,9 @@
 name: CI
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     branches: [ main, master, develop ]
@@ -88,9 +92,6 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -144,8 +145,8 @@ jobs:
 
       # 把 SARIF 上传到 Security → Code scanning
       - name: Upload code quality reports
+        if: github.event_name == 'push' # 只在 push 时上传
         uses: github/codeql-action/upload-sarif@v3
-        if: always()
         with:
           sarif_file: app/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.sarif
           category: ktlint
