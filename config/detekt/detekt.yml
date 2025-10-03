@@ -537,8 +537,6 @@ style:
     active: false
   CollapsibleIfStatements:
     active: false
-  DataClassContainsFunction:
-    active: false
   DataClassShouldBeImmutable:
     active: false
   EqualsNullCall:
