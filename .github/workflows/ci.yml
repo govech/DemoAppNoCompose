@@ -120,12 +120,17 @@ jobs:
         run: ./gradlew detekt
         continue-on-error: true
 
-      - name: Upload code quality reports
-        uses: actions/upload-artifact@v4
+      # 把 SARIF 上传到 Security → Code scanning
+      - name: Upload ktlint SARIF
+        uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
-          name: code-quality-reports
-          path: |
-            app/build/reports/
-            build/reports/
-          if-no-files-found: ignore
+          sarif_file: app/build/reports/ktlint/ktlintMainSourceSetCheck/ktlintMainSourceSetCheck.sarif
+          category: ktlint
+
+      - name: Upload detekt SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: app/build/reports/detekt/detekt.sarif
+          category: detekt
