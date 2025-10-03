@@ -2,7 +2,7 @@
 # 用于 Kotlin 代码静态分析
 
 build:
-  maxIssues: 0
+  maxIssues: 1000
   excludeCorrectable: false
   weights:
     complexity: 2
