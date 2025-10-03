@@ -92,8 +92,8 @@ android {
         checkReleaseBuilds = false
         htmlReport = true
         xmlReport = true
-        htmlOutput = file("$buildDir/reports/lint-results.html")
-        xmlOutput = file("$buildDir/reports/lint-results.xml")
+        htmlOutput = file("${layout.buildDirectory.get().asFile}/reports/lint-results.html")
+        xmlOutput = file("${layout.buildDirectory.get().asFile}/reports/lint-results.xml")
     }
 }
 
@@ -181,7 +181,7 @@ ktlint {
 // detekt 配置
 detekt {
     toolVersion = "1.23.4"
-    config.setFrom(file("../config/detekt/detekt.yml"))
+    config.setFrom(file("${rootProject.projectDir}/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
     allRules = false
     
