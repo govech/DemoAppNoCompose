@@ -12,7 +12,6 @@ import lj.sword.demoappnocompose.utils.JsonUtil
 /**
  * 对象转 JSON 字符串
  */
-@Suppress("ktlint:standard:no-consecutive-comments")
 fun Any.toJson(): String = JsonUtil.toJson(this)
 
 /**

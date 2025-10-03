@@ -88,7 +88,9 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -120,8 +122,28 @@ jobs:
         run: ./gradlew detekt
         continue-on-error: true
 
+      # 1️⃣ 把报告存成可下载 zip（留底）
+      - name: Upload ktlint artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ktlint-report
+          path: |
+            **/build/reports/ktlint/
+            app/build/reports/ktlint/
+
+      - name: Upload detekt artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: detekt-report
+          path: |
+            **/build/reports/detekt/
+            app/build/reports/detekt/
+            
+
       # 把 SARIF 上传到 Security → Code scanning
-      - name: Upload ktlint SARIF
+      - name: Upload code quality reports
         uses: github/codeql-action/upload-sarif@v3
         if: always()
         with:
@@ -134,3 +156,10 @@ jobs:
         with:
           sarif_file: app/build/reports/detekt/detekt.sarif
           category: detekt
+
+      # 可选：质量红线（仍让 job 红脸）
+      - name: Quality gate
+        if: steps.ktlint.outcome == 'failure' || steps.detekt.outcome == 'failure'
+        run: |
+          echo "❌ Code quality checks failed"
+          exit 1
