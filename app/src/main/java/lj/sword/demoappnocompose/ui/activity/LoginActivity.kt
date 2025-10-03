@@ -24,17 +24,15 @@ import lj.sword.demoappnocompose.widget.LoadingDialog
  * - 网络请求和状态管理
  * - 自定义组件的使用
  * - Kotlin 扩展函数的使用
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>() {
-
     override val bindingInflater: (LayoutInflater) -> ActivityLoginBinding = ActivityLoginBinding::inflate
 
     override val viewModel: LoginViewModel by viewModels()
-
 
     override fun initView() {
         // 初始化视图
@@ -77,8 +75,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
      * 执行登录
      */
     private fun performLogin() {
-        val username = binding.etUsername.text?.toString()?.trim() ?: ""
-        val password = binding.etPassword.text?.toString()?.trim() ?: ""
+        val username =
+            binding.etUsername.text
+                ?.toString()
+                ?.trim() ?: ""
+        val password =
+            binding.etPassword.text
+                ?.toString()
+                ?.trim() ?: ""
 
         // 表单验证
         if (username.isEmpty()) {
@@ -100,9 +104,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
         }
 
         // 埋点统计
-        TrackManager.trackEvent("click_login", mapOf(
-            "username" to username
-        ))
+        TrackManager.trackEvent(
+            "click_login",
+            mapOf(
+                "username" to username,
+            ),
+        )
 
         // 执行登录
         viewModel.login(username, password)
@@ -122,19 +129,22 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                     is UiState.Success -> {
                         // 隐藏加载框
                         LoadingDialog.dismissLoading()
-                        
+
                         // 登录成功
                         toast("登录成功！")
-                        
+
                         val user = state.data
                         Logger.d("Login success: userId=${user.id}, username=${user.username}")
-                        
+
                         // 埋点统计
-                        TrackManager.trackEvent("login_success", mapOf(
-                            "userId" to user.id,
-                            "username" to user.username
-                        ))
-                        
+                        TrackManager.trackEvent(
+                            "login_success",
+                            mapOf(
+                                "userId" to user.id,
+                                "username" to user.username,
+                            ),
+                        )
+
                         // 跳转到主页（这里暂时关闭当前页面）
                         // startActivity<MainActivity>()
                         toast("登录功能演示完成！")
@@ -152,9 +162,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>() {
                         Logger.e("Login failed: ${state.message}")
 
                         // 埋点统计
-                        TrackManager.trackEvent("login_failed", mapOf(
-                            "error" to state.message
-                        ))
+                        TrackManager.trackEvent(
+                            "login_failed",
+                            mapOf(
+                                "error" to state.message,
+                            ),
+                        )
                     }
                     else -> {
                         // Empty 状态，不处理

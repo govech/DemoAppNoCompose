@@ -16,12 +16,11 @@ import javax.inject.Inject
 /**
  * ViewModel 基类
  * 提供统一的 Loading 状态管理、异常捕获、协程封装
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 abstract class BaseViewModel : ViewModel() {
-
     @Inject
     lateinit var appExceptionHandler: ExceptionHandler
 
@@ -40,9 +39,10 @@ abstract class BaseViewModel : ViewModel() {
     /**
      * 协程异常处理器
      */
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        handleException(throwable)
-    }
+    private val coroutineExceptionHandler =
+        CoroutineExceptionHandler { _, throwable ->
+            handleException(throwable)
+        }
 
     /**
      * 启动协程（带异常处理）
@@ -51,7 +51,7 @@ abstract class BaseViewModel : ViewModel() {
      */
     protected fun launchWithLoading(
         showLoading: Boolean = true,
-        block: suspend CoroutineScope.() -> Unit
+        block: suspend CoroutineScope.() -> Unit,
     ) {
         viewModelScope.launch(coroutineExceptionHandler) {
             try {
@@ -66,9 +66,7 @@ abstract class BaseViewModel : ViewModel() {
     /**
      * 启动协程（不带 Loading）
      */
-    protected fun launchSafely(
-        block: suspend CoroutineScope.() -> Unit
-    ) {
+    protected fun launchSafely(block: suspend CoroutineScope.() -> Unit) {
         viewModelScope.launch(coroutineExceptionHandler) {
             block()
         }
@@ -80,20 +78,21 @@ abstract class BaseViewModel : ViewModel() {
      */
     protected open fun handleException(throwable: Throwable) {
         _loading.value = false
-        
+
         // 使用异常处理器获取用户友好的错误消息
-        val errorMessage = if (::appExceptionHandler.isInitialized) {
-            appExceptionHandler.getUserFriendlyMessage(throwable)
-        } else {
-            when (throwable) {
-                is AppException -> throwable.getUserFriendlyMessage()
-                is ApiException -> throwable.msg
-                else -> throwable.message ?: "未知错误"
+        val errorMessage =
+            if (::appExceptionHandler.isInitialized) {
+                appExceptionHandler.getUserFriendlyMessage(throwable)
+            } else {
+                when (throwable) {
+                    is AppException -> throwable.getUserFriendlyMessage()
+                    is ApiException -> throwable.msg
+                    else -> throwable.message ?: "未知错误"
+                }
             }
-        }
-        
+
         _error.value = errorMessage
-        
+
         // 检查是否需要用户操作
         if (throwable is AppException) {
             checkUserActionRequired(throwable)
@@ -164,8 +163,12 @@ abstract class BaseViewModel : ViewModel() {
  */
 sealed class UserActionRequired(val message: String) {
     class ReLogin(message: String) : UserActionRequired(message)
+
     class CheckNetwork(message: String) : UserActionRequired(message)
+
     class CleanStorage(message: String) : UserActionRequired(message)
+
     class GrantPermission(message: String) : UserActionRequired(message)
+
     class ContactSupport(message: String) : UserActionRequired(message)
 }

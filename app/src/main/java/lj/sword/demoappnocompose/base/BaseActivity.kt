@@ -12,14 +12,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import kotlinx.coroutines.launch
 
-
 /**
  * 无反射的 ViewBinding 扩展函数
  */
-fun <VB : ViewBinding> AppCompatActivity.inflateBinding(
-    inflater: (LayoutInflater) -> VB
-): VB = inflater(layoutInflater)
-
+fun <VB : ViewBinding> AppCompatActivity.inflateBinding(inflater: (LayoutInflater) -> VB): VB = inflater(layoutInflater)
 
 /**
  * Activity 基类
@@ -30,7 +26,6 @@ fun <VB : ViewBinding> AppCompatActivity.inflateBinding(
  * @since 1.0.0
  */
 abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
-
     /** ViewBinding 实例 */
     protected lateinit var binding: VB
 
@@ -42,7 +37,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     /** 是否第一次加载 */
     private var isFirstLoad = true
-
 
     private var isSetContentView = false
 
@@ -84,7 +78,14 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { vm.loading.collect { if (it) showLoading() else hideLoading() } }
-                launch { vm.error.collect { it?.let { msg -> showError(msg); vm.clearError() } } }
+                launch {
+                    vm.error.collect {
+                        it?.let { msg ->
+                            showError(msg)
+                            vm.clearError()
+                        }
+                    }
+                }
             }
         }
     }
@@ -123,4 +124,3 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         }
     }
 }
-

@@ -8,7 +8,7 @@ import lj.sword.demoappnocompose.utils.ScreenUtil
 
 /**
  * Context 扩展函数
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
@@ -16,14 +16,21 @@ import lj.sword.demoappnocompose.utils.ScreenUtil
 /**
  * 显示 Toast
  */
-fun Context.toast(message: String, duration: Int = Toast.LENGTH_SHORT) {
+@Suppress("ktlint:standard:no-consecutive-comments")
+fun Context.toast(
+    message: String,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
     Toast.makeText(this, message, duration).show()
 }
 
 /**
  * 显示 Toast（字符串资源）
  */
-fun Context.toast(messageResId: Int, duration: Int = Toast.LENGTH_SHORT) {
+fun Context.toast(
+    messageResId: Int,
+    duration: Int = Toast.LENGTH_SHORT,
+) {
     Toast.makeText(this, messageResId, duration).show()
 }
 
@@ -47,40 +54,33 @@ inline fun <reified T : Activity> Activity.startActivityAndFinish(block: Intent.
 /**
  * dp 转 px
  */
-fun Context.dp2px(dp: Float): Int {
-    return ScreenUtil.dp2px(this, dp)
-}
+fun Context.dp2px(dp: Float): Int = ScreenUtil.dp2px(this, dp)
 
 /**
  * dp 转 px（Int）
  */
-fun Context.dp2px(dp: Int): Int {
-    return ScreenUtil.dp2px(this, dp.toFloat())
-}
+fun Context.dp2px(dp: Int): Int = ScreenUtil.dp2px(this, dp.toFloat())
 
 /**
  * px 转 dp
  */
-fun Context.px2dp(px: Float): Int {
-    return ScreenUtil.px2dp(this, px)
-}
+fun Context.px2dp(px: Float): Int = ScreenUtil.px2dp(this, px)
 
 /**
  * sp 转 px
  */
-fun Context.sp2px(sp: Float): Int {
-    return ScreenUtil.sp2px(this, sp)
-}
+fun Context.sp2px(sp: Float): Int = ScreenUtil.sp2px(this, sp)
 
 /**
  * 获取颜色
  */
-fun Context.getColorCompat(colorRes: Int): Int {
-    return androidx.core.content.ContextCompat.getColor(this, colorRes)
-}
+fun Context.getColorCompat(colorRes: Int): Int =
+    androidx.core.content.ContextCompat
+        .getColor(this, colorRes)
 
 /**
  * 获取 Drawable
  */
 fun Context.getDrawableCompat(drawableRes: Int) =
-    androidx.core.content.ContextCompat.getDrawable(this, drawableRes)
+    androidx.core.content.ContextCompat
+        .getDrawable(this, drawableRes)

@@ -8,12 +8,11 @@ import com.google.gson.reflect.TypeToken
 /**
  * JSON 工具类
  * 基于 Gson 提供 JSON 解析功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object JsonUtil {
-
     @JvmStatic
     val gson: Gson by lazy {
         GsonBuilder()

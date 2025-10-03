@@ -13,22 +13,19 @@ import javax.inject.Singleton
 /**
  * UseCase 依赖注入模块
  * 提供所有 UseCase 实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object UseCaseModule {
-
     /**
      * 提供 LoginUseCase 实例
      */
     @Provides
     @Singleton
-    fun provideLoginUseCase(
-        userRepository: UserRepository
-    ): LoginUseCase {
+    fun provideLoginUseCase(userRepository: UserRepository): LoginUseCase {
         return LoginUseCase(userRepository)
     }
 
@@ -37,9 +34,7 @@ object UseCaseModule {
      */
     @Provides
     @Singleton
-    fun provideGetUserInfoUseCase(
-        userRepository: UserRepository
-    ): GetUserInfoUseCase {
+    fun provideGetUserInfoUseCase(userRepository: UserRepository): GetUserInfoUseCase {
         return GetUserInfoUseCase(userRepository)
     }
 
@@ -48,9 +43,7 @@ object UseCaseModule {
      */
     @Provides
     @Singleton
-    fun provideUpdateUserUseCase(
-        userRepository: UserRepository
-    ): UpdateUserUseCase {
+    fun provideUpdateUserUseCase(userRepository: UserRepository): UpdateUserUseCase {
         return UpdateUserUseCase(userRepository)
     }
 }

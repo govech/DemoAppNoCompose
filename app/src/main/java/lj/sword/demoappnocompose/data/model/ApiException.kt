@@ -3,18 +3,17 @@ package lj.sword.demoappnocompose.data.model
 /**
  * API 异常类
  * 封装网络请求过程中的各种异常
- * 
+ *
  * @property code 错误码
  * @property msg 错误信息
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 class ApiException(
     val code: Int,
-    val msg: String
+    val msg: String,
 ) : Exception(msg) {
-
     companion object {
         // 网络异常
         const val CODE_NETWORK_ERROR = -1000

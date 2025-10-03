@@ -2,7 +2,7 @@ package lj.sword.demoappnocompose.constant
 
 /**
  * 网络相关常量
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */

@@ -3,14 +3,13 @@ package lj.sword.demoappnocompose.manager
 /**
  * 埋点统计管理器
  * 统一管理应用的埋点上报
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object TrackManager {
-
     private var tracker: ITracker? = null
-    
+
     /**
      * 是否启用埋点
      */
@@ -28,7 +27,10 @@ object TrackManager {
      * 页面浏览埋点
      */
     @JvmStatic
-    fun trackPageView(pageName: String, params: Map<String, Any>? = null) {
+    fun trackPageView(
+        pageName: String,
+        params: Map<String, Any>? = null,
+    ) {
         if (isEnabled) {
             tracker?.trackPageView(pageName, params)
         }
@@ -38,7 +40,10 @@ object TrackManager {
      * 事件埋点
      */
     @JvmStatic
-    fun trackEvent(eventName: String, params: Map<String, Any>? = null) {
+    fun trackEvent(
+        eventName: String,
+        params: Map<String, Any>? = null,
+    ) {
         if (isEnabled) {
             tracker?.trackEvent(eventName, params)
         }
@@ -48,7 +53,12 @@ object TrackManager {
      * 接口调用埋点
      */
     @JvmStatic
-    fun trackApi(apiName: String, success: Boolean, duration: Long, params: Map<String, Any>? = null) {
+    fun trackApi(
+        apiName: String,
+        success: Boolean,
+        duration: Long,
+        params: Map<String, Any>? = null,
+    ) {
         if (isEnabled) {
             tracker?.trackApi(apiName, success, duration, params)
         }
@@ -58,7 +68,10 @@ object TrackManager {
      * 异常埋点
      */
     @JvmStatic
-    fun trackException(throwable: Throwable, context: String? = null) {
+    fun trackException(
+        throwable: Throwable,
+        context: String? = null,
+    ) {
         if (isEnabled) {
             tracker?.trackException(throwable, context)
         }
@@ -68,7 +81,10 @@ object TrackManager {
      * 设置用户属性
      */
     @JvmStatic
-    fun setUserProperty(key: String, value: Any) {
+    fun setUserProperty(
+        key: String,
+        value: Any,
+    ) {
         if (isEnabled) {
             tracker?.setUserProperty(key, value)
         }
@@ -80,11 +96,32 @@ object TrackManager {
  * 可以实现多个平台的埋点（友盟、神策等）
  */
 interface ITracker {
-    fun trackPageView(pageName: String, params: Map<String, Any>?)
-    fun trackEvent(eventName: String, params: Map<String, Any>?)
-    fun trackApi(apiName: String, success: Boolean, duration: Long, params: Map<String, Any>?)
-    fun trackException(throwable: Throwable, context: String?)
-    fun setUserProperty(key: String, value: Any)
+    fun trackPageView(
+        pageName: String,
+        params: Map<String, Any>?,
+    )
+
+    fun trackEvent(
+        eventName: String,
+        params: Map<String, Any>?,
+    )
+
+    fun trackApi(
+        apiName: String,
+        success: Boolean,
+        duration: Long,
+        params: Map<String, Any>?,
+    )
+
+    fun trackException(
+        throwable: Throwable,
+        context: String?,
+    )
+
+    fun setUserProperty(
+        key: String,
+        value: Any,
+    )
 }
 
 /**
@@ -92,23 +129,40 @@ interface ITracker {
  * 实际项目中可以替换为具体的埋点 SDK
  */
 class DefaultTracker : ITracker {
-    override fun trackPageView(pageName: String, params: Map<String, Any>?) {
+    override fun trackPageView(
+        pageName: String,
+        params: Map<String, Any>?,
+    ) {
         Logger.d("[Track] PageView: $pageName, params: $params")
     }
 
-    override fun trackEvent(eventName: String, params: Map<String, Any>?) {
+    override fun trackEvent(
+        eventName: String,
+        params: Map<String, Any>?,
+    ) {
         Logger.d("[Track] Event: $eventName, params: $params")
     }
 
-    override fun trackApi(apiName: String, success: Boolean, duration: Long, params: Map<String, Any>?) {
+    override fun trackApi(
+        apiName: String,
+        success: Boolean,
+        duration: Long,
+        params: Map<String, Any>?,
+    ) {
         Logger.d("[Track] API: $apiName, success: $success, duration: ${duration}ms, params: $params")
     }
 
-    override fun trackException(throwable: Throwable, context: String?) {
+    override fun trackException(
+        throwable: Throwable,
+        context: String?,
+    ) {
         Logger.e("[Track] Exception: ${throwable.message}, context: $context", throwable)
     }
 
-    override fun setUserProperty(key: String, value: Any) {
+    override fun setUserProperty(
+        key: String,
+        value: Any,
+    ) {
         Logger.d("[Track] UserProperty: $key = $value")
     }
 }

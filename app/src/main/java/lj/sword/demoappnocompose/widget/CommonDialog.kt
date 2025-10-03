@@ -9,29 +9,28 @@ import lj.sword.demoappnocompose.databinding.LayoutCommonDialogBinding
 /**
  * 通用对话框
  * 支持单按钮、双按钮样式
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 class CommonDialog(context: Context) : Dialog(context, android.R.style.Theme_Dialog) {
-
     private val binding: LayoutCommonDialogBinding
-    
+
     private var onConfirmListener: (() -> Unit)? = null
     private var onCancelListener: (() -> Unit)? = null
 
     init {
         binding = LayoutCommonDialogBinding.inflate(LayoutInflater.from(context))
         setContentView(binding.root)
-        
+
         window?.setBackgroundDrawableResource(android.R.color.transparent)
-        
+
         // 设置按钮点击事件
         binding.btnConfirm.setOnClickListener {
             onConfirmListener?.invoke()
             dismiss()
         }
-        
+
         binding.btnCancel.setOnClickListener {
             onCancelListener?.invoke()
             dismiss()
@@ -165,14 +164,14 @@ class CommonDialog(context: Context) : Dialog(context, android.R.style.Theme_Dia
             dialog.setConfirmText(confirmText)
             dialog.setCancelText(cancelText)
             dialog.setCancelable(cancelable)
-            
+
             if (isSingleButton) {
                 dialog.setSingleButton()
             }
-            
+
             onConfirmListener?.let { dialog.setOnConfirmListener(it) }
             onCancelListener?.let { dialog.setOnCancelListener(it) }
-            
+
             return dialog
         }
 

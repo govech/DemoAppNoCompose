@@ -3,12 +3,11 @@ package lj.sword.demoappnocompose.utils
 /**
  * 正则验证工具类
  * 提供常用的正则验证功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object RegexUtil {
-
     /**
      * 手机号正则
      */
@@ -102,13 +101,13 @@ object RegexUtil {
     @JvmStatic
     fun isStrongPassword(password: String?): Boolean {
         if (password == null || password.length !in 8..20) return false
-        
+
         var typeCount = 0
         if (password.any { it.isLowerCase() }) typeCount++
         if (password.any { it.isUpperCase() }) typeCount++
         if (password.any { it.isDigit() }) typeCount++
         if (password.any { !it.isLetterOrDigit() }) typeCount++
-        
+
         return typeCount >= 3
     }
 }

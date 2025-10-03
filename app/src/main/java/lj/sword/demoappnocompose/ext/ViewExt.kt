@@ -3,13 +3,6 @@ package lj.sword.demoappnocompose.ext
 import android.view.View
 
 /**
- * View 扩展函数
- * 
- * @author Sword
- * @since 1.0.0
- */
-
-/**
  * 设置View可见性为VISIBLE
  */
 fun View.visible() {
@@ -49,9 +42,7 @@ fun View.visibleOrInvisible(visible: Boolean) {
 /**
  * 判断View是否可见
  */
-fun View.isVisible(): Boolean {
-    return visibility == View.VISIBLE
-}
+fun View.isVisible(): Boolean = visibility == View.VISIBLE
 
 /**
  * 防抖点击
@@ -59,7 +50,11 @@ fun View.isVisible(): Boolean {
  * @param action 点击事件
  */
 private var lastClickTime = 0L
-fun View.setOnClickListener(interval: Long = 500, action: (View) -> Unit) {
+
+fun View.setOnClickListener(
+    interval: Long = 500,
+    action: (View) -> Unit,
+) {
     setOnClickListener {
         val currentTime = System.currentTimeMillis()
         if (currentTime - lastClickTime > interval) {
@@ -72,7 +67,10 @@ fun View.setOnClickListener(interval: Long = 500, action: (View) -> Unit) {
 /**
  * 防抖点击（简化版）
  */
-fun View.onSingleClick(interval: Long = 500, action: () -> Unit) {
+fun View.onSingleClick(
+    interval: Long = 500,
+    action: () -> Unit,
+) {
     var lastClickTime = 0L
     setOnClickListener {
         val currentTime = System.currentTimeMillis()

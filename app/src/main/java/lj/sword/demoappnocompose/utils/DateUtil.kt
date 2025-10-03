@@ -1,17 +1,18 @@
 package lj.sword.demoappnocompose.utils
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 /**
  * 日期工具类
  * 提供日期格式化、转换等功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object DateUtil {
-
     const val PATTERN_DEFAULT = "yyyy-MM-dd HH:mm:ss"
     const val PATTERN_DATE = "yyyy-MM-dd"
     const val PATTERN_TIME = "HH:mm:ss"
@@ -36,15 +37,14 @@ object DateUtil {
     @JvmStatic
     fun formatTimestamp(
         timestamp: Long,
-        pattern: String = PATTERN_DEFAULT
-    ): String {
-        return try {
+        pattern: String = PATTERN_DEFAULT,
+    ): String =
+        try {
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
             sdf.format(Date(timestamp))
         } catch (e: Exception) {
             ""
         }
-    }
 
     /**
      * 字符串转时间戳
@@ -52,15 +52,14 @@ object DateUtil {
     @JvmStatic
     fun parseToTimestamp(
         dateString: String,
-        pattern: String = PATTERN_DEFAULT
-    ): Long {
-        return try {
+        pattern: String = PATTERN_DEFAULT,
+    ): Long =
+        try {
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
             sdf.parse(dateString)?.time ?: 0
         } catch (e: Exception) {
             0
         }
-    }
 
     /**
      * 格式化 Date 对象
@@ -68,23 +67,20 @@ object DateUtil {
     @JvmStatic
     fun formatDate(
         date: Date,
-        pattern: String = PATTERN_DEFAULT
-    ): String {
-        return try {
+        pattern: String = PATTERN_DEFAULT,
+    ): String =
+        try {
             val sdf = SimpleDateFormat(pattern, Locale.getDefault())
             sdf.format(date)
         } catch (e: Exception) {
             ""
         }
-    }
 
     /**
      * 获取今天的日期字符串
      */
     @JvmStatic
-    fun getTodayString(pattern: String = PATTERN_DATE): String {
-        return formatDate(Date(), pattern)
-    }
+    fun getTodayString(pattern: String = PATTERN_DATE): String = formatDate(Date(), pattern)
 
     /**
      * 判断是否是今天
@@ -130,7 +126,8 @@ object DateUtil {
      * 计算两个时间戳之间的天数差
      */
     @JvmStatic
-    fun daysBetween(startTimestamp: Long, endTimestamp: Long): Long {
-        return (endTimestamp - startTimestamp) / (24 * 60 * 60 * 1000)
-    }
+    fun daysBetween(
+        startTimestamp: Long,
+        endTimestamp: Long,
+    ): Long = (endTimestamp - startTimestamp) / (24 * 60 * 60 * 1000)
 }

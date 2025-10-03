@@ -1,19 +1,18 @@
 package lj.sword.demoappnocompose.utils
 
+import android.util.Base64
 import java.security.MessageDigest
 import javax.crypto.Cipher
 import javax.crypto.spec.SecretKeySpec
-import android.util.Base64
 
 /**
  * 加密工具类
  * 提供 MD5、AES 等加密功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object EncryptUtil {
-
     /**
      * MD5 加密
      */
@@ -48,7 +47,10 @@ object EncryptUtil {
      * @param key 密钥（16位）
      */
     @JvmStatic
-    fun aesEncrypt(input: String, key: String): String? {
+    fun aesEncrypt(
+        input: String,
+        key: String,
+    ): String? {
         return try {
             val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             val keySpec = SecretKeySpec(key.toByteArray(), "AES")
@@ -67,7 +69,10 @@ object EncryptUtil {
      * @param key 密钥（16位）
      */
     @JvmStatic
-    fun aesDecrypt(encrypted: String, key: String): String? {
+    fun aesDecrypt(
+        encrypted: String,
+        key: String,
+    ): String? {
         return try {
             val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
             val keySpec = SecretKeySpec(key.toByteArray(), "AES")

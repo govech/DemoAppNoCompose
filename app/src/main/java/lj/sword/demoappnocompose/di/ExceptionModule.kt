@@ -15,21 +15,20 @@ import javax.inject.Singleton
 /**
  * 异常处理依赖注入模块
  * 提供异常处理相关的实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object ExceptionModule {
-
     /**
      * 提供网络异常恢复策略
      */
     @Provides
     @Singleton
     fun provideNetworkExceptionRecovery(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): NetworkExceptionRecovery {
         return NetworkExceptionRecovery(context)
     }
@@ -40,7 +39,7 @@ object ExceptionModule {
     @Provides
     @Singleton
     fun provideDatabaseExceptionRecovery(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): DatabaseExceptionRecovery {
         return DatabaseExceptionRecovery(context)
     }
@@ -52,7 +51,7 @@ object ExceptionModule {
     @Singleton
     fun provideExceptionHandler(
         networkRecovery: NetworkExceptionRecovery,
-        databaseRecovery: DatabaseExceptionRecovery
+        databaseRecovery: DatabaseExceptionRecovery,
     ): ExceptionHandler {
         return ExceptionHandler(networkRecovery, databaseRecovery)
     }
@@ -63,7 +62,7 @@ object ExceptionModule {
     @Provides
     @Singleton
     fun provideErrorMessageMapper(
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): ErrorMessageMapper {
         return ErrorMessageMapper(context)
     }

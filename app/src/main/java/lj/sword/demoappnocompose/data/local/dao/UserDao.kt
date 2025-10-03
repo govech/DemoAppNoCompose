@@ -1,18 +1,22 @@
 package lj.sword.demoappnocompose.data.local.dao
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import lj.sword.demoappnocompose.data.model.UserEntity
 
 /**
  * 用户数据访问对象（示例）
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Dao
 interface UserDao {
-
     /**
      * 插入用户
      */

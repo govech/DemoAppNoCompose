@@ -1,6 +1,5 @@
 package lj.sword.demoappnocompose.base
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,15 +8,14 @@ import androidx.viewbinding.ViewBinding
 /**
  * RecyclerView 通用适配器基类
  * 支持 ViewBinding、DiffUtil、点击事件
- * 
+ *
  * @param T 数据类型
  * @param VB ViewBinding 类型
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapter.BaseViewHolder<VB>>() {
-
     /**
      * 数据列表
      */
@@ -41,9 +39,16 @@ abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapt
     /**
      * 绑定数据（子类实现）
      */
-    protected abstract fun bind(binding: VB, item: T, position: Int)
+    protected abstract fun bind(
+        binding: VB,
+        item: T,
+        position: Int,
+    )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<VB> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int,
+    ): BaseViewHolder<VB> {
         val binding = createBinding(parent)
         val holder = BaseViewHolder(binding)
 
@@ -68,7 +73,10 @@ abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapt
         return holder
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<VB>, position: Int) {
+    override fun onBindViewHolder(
+        holder: BaseViewHolder<VB>,
+        position: Int,
+    ) {
         bind(holder.binding, items[position], position)
     }
 
@@ -77,19 +85,30 @@ abstract class BaseAdapter<T, VB : ViewBinding> : RecyclerView.Adapter<BaseAdapt
     /**
      * 设置数据列表（使用 DiffUtil）
      */
-    fun setItems(newItems: List<T>, areItemsTheSame: (T, T) -> Boolean) {
-        val diffCallback = object : DiffUtil.Callback() {
-            override fun getOldListSize(): Int = items.size
-            override fun getNewListSize(): Int = newItems.size
+    fun setItems(
+        newItems: List<T>,
+        areItemsTheSame: (T, T) -> Boolean,
+    ) {
+        val diffCallback =
+            object : DiffUtil.Callback() {
+                override fun getOldListSize(): Int = items.size
 
-            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return areItemsTheSame(items[oldItemPosition], newItems[newItemPosition])
-            }
+                override fun getNewListSize(): Int = newItems.size
 
-            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition] == newItems[newItemPosition]
+                override fun areItemsTheSame(
+                    oldItemPosition: Int,
+                    newItemPosition: Int,
+                ): Boolean {
+                    return areItemsTheSame(items[oldItemPosition], newItems[newItemPosition])
+                }
+
+                override fun areContentsTheSame(
+                    oldItemPosition: Int,
+                    newItemPosition: Int,
+                ): Boolean {
+                    return items[oldItemPosition] == newItems[newItemPosition]
+                }
             }
-        }
 
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         items.clear()

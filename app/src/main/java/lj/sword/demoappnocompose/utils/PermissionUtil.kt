@@ -9,20 +9,22 @@ import androidx.core.content.ContextCompat
 /**
  * 权限工具类
  * 提供权限检查和请求功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object PermissionUtil {
-
     /**
      * 检查单个权限是否已授予
      */
     @JvmStatic
-    fun hasPermission(context: Context, permission: String): Boolean {
+    fun hasPermission(
+        context: Context,
+        permission: String,
+    ): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
-            permission
+            permission,
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -30,7 +32,10 @@ object PermissionUtil {
      * 检查多个权限是否都已授予
      */
     @JvmStatic
-    fun hasPermissions(context: Context, vararg permissions: String): Boolean {
+    fun hasPermissions(
+        context: Context,
+        vararg permissions: String,
+    ): Boolean {
         return permissions.all { hasPermission(context, it) }
     }
 
@@ -38,7 +43,11 @@ object PermissionUtil {
      * 请求单个权限
      */
     @JvmStatic
-    fun requestPermission(activity: Activity, permission: String, requestCode: Int) {
+    fun requestPermission(
+        activity: Activity,
+        permission: String,
+        requestCode: Int,
+    ) {
         ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
     }
 
@@ -46,7 +55,11 @@ object PermissionUtil {
      * 请求多个权限
      */
     @JvmStatic
-    fun requestPermissions(activity: Activity, permissions: Array<String>, requestCode: Int) {
+    fun requestPermissions(
+        activity: Activity,
+        permissions: Array<String>,
+        requestCode: Int,
+    ) {
         ActivityCompat.requestPermissions(activity, permissions, requestCode)
     }
 
@@ -56,14 +69,17 @@ object PermissionUtil {
     @JvmStatic
     fun checkPermissionResult(grantResults: IntArray): Boolean {
         return grantResults.isNotEmpty() &&
-                grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+            grantResults.all { it == PackageManager.PERMISSION_GRANTED }
     }
 
     /**
      * 判断是否应该显示权限说明
      */
     @JvmStatic
-    fun shouldShowRequestPermissionRationale(activity: Activity, permission: String): Boolean {
+    fun shouldShowRequestPermissionRationale(
+        activity: Activity,
+        permission: String,
+    ): Boolean {
         return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
     }
 
@@ -71,7 +87,10 @@ object PermissionUtil {
      * 过滤未授予的权限
      */
     @JvmStatic
-    fun filterDeniedPermissions(context: Context, vararg permissions: String): List<String> {
+    fun filterDeniedPermissions(
+        context: Context,
+        vararg permissions: String,
+    ): List<String> {
         return permissions.filter { !hasPermission(context, it) }
     }
 }

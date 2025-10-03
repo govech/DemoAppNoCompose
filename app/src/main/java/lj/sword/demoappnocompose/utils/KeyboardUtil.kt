@@ -8,12 +8,11 @@ import android.view.inputmethod.InputMethodManager
 /**
  * 键盘工具类
  * 提供软键盘显示/隐藏功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object KeyboardUtil {
-
     /**
      * 显示软键盘
      */

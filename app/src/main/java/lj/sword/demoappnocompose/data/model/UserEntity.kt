@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 /**
  * 用户实体类（示例）
  * Room 数据库表
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
@@ -18,5 +18,5 @@ data class UserEntity(
     val avatar: String?,
     val phone: String?,
     val email: String?,
-    val createTime: Long = System.currentTimeMillis()
+    val createTime: Long = System.currentTimeMillis(),
 )

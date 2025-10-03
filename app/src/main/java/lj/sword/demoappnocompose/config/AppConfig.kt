@@ -2,45 +2,44 @@ package lj.sword.demoappnocompose.config
 
 import android.content.Context
 import lj.sword.demoappnocompose.BuildConfig
-import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * 应用配置管理类
  * 统一管理应用的所有配置信息
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Singleton
 class AppConfig private constructor(
     private val context: Context,
-    private val builder: Builder
+    private val builder: Builder,
 ) {
-
     companion object {
+        @Suppress("ktlint:standard:property-naming")
         @Volatile
         private var INSTANCE: AppConfig? = null
 
         /**
          * 获取配置实例
          */
-        fun getInstance(): AppConfig {
-            return INSTANCE ?: throw IllegalStateException("AppConfig未初始化，请先调用init()方法")
-        }
+        fun getInstance(): AppConfig = INSTANCE ?: throw IllegalStateException("AppConfig未初始化，请先调用init()方法")
 
         /**
          * 初始化配置
          */
-        fun init(context: Context, block: Builder.() -> Unit = {}): AppConfig {
-            return INSTANCE ?: synchronized(this) {
+        fun init(
+            context: Context,
+            block: Builder.() -> Unit = {},
+        ): AppConfig =
+            INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Builder(context).apply(block).build().also { INSTANCE = it }
             }
-        }
     }
 
     // ==================== 网络配置 ====================
-    
+
     /**
      * 基础URL
      */
@@ -211,7 +210,9 @@ class AppConfig private constructor(
     /**
      * 配置构建器
      */
-    class Builder(private val context: Context) {
+    class Builder(
+        private val context: Context,
+    ) {
         // 网络配置
         var baseUrl: String = "https://api.example.com/"
         var connectTimeout: Long = 30
@@ -354,9 +355,7 @@ class AppConfig private constructor(
         /**
          * 构建配置
          */
-        fun build(): AppConfig {
-            return AppConfig(context, this)
-        }
+        fun build(): AppConfig = AppConfig(context, this)
     }
 
     /**
@@ -368,7 +367,7 @@ class AppConfig private constructor(
         var readTimeout: Long = 30,
         var writeTimeout: Long = 30,
         var enableNetworkLog: Boolean = BuildConfig.DEBUG,
-        var maxRetryCount: Int = 3
+        var maxRetryCount: Int = 3,
     )
 
     /**
@@ -380,7 +379,7 @@ class AppConfig private constructor(
         var accentColor: Int = 0xFF03DAC5.toInt(),
         var defaultFontSize: Float = 14f,
         var enableAnimation: Boolean = true,
-        var animationDuration: Long = 300
+        var animationDuration: Long = 300,
     )
 
     /**
@@ -390,7 +389,7 @@ class AppConfig private constructor(
         var memoryCacheSize: Int = 50,
         var diskCacheSize: Int = 200,
         var cacheExpireTime: Long = 24,
-        var enableCache: Boolean = true
+        var enableCache: Boolean = true,
     )
 
     /**
@@ -400,7 +399,7 @@ class AppConfig private constructor(
         var enableLog: Boolean = BuildConfig.DEBUG,
         var logLevel: LogLevel = if (BuildConfig.DEBUG) LogLevel.DEBUG else LogLevel.ERROR,
         var saveLogToFile: Boolean = false,
-        var maxLogFileSize: Int = 10
+        var maxLogFileSize: Int = 10,
     )
 
     /**
@@ -410,7 +409,7 @@ class AppConfig private constructor(
         var databaseName: String = "app_database",
         var databaseVersion: Int = 1,
         var enableWalMode: Boolean = true,
-        var databasePageSize: Int = 4096
+        var databasePageSize: Int = 4096,
     )
 
     /**
@@ -420,7 +419,7 @@ class AppConfig private constructor(
         var enablePerformanceMonitor: Boolean = BuildConfig.DEBUG,
         var startupTimeout: Long = 10000,
         var memoryWarningThreshold: Int = 100,
-        var enableCrashCollection: Boolean = !BuildConfig.DEBUG
+        var enableCrashCollection: Boolean = !BuildConfig.DEBUG,
     )
 
     /**
@@ -429,13 +428,17 @@ class AppConfig private constructor(
     data class SecurityConfig(
         var enableCertificatePinning: Boolean = !BuildConfig.DEBUG,
         var enableObfuscation: Boolean = !BuildConfig.DEBUG,
-        var encryptionKey: String = "default_key_change_in_production"
+        var encryptionKey: String = "default_key_change_in_production",
     )
 
     /**
      * 日志级别
      */
     enum class LogLevel {
-        VERBOSE, DEBUG, INFO, WARN, ERROR
+        VERBOSE,
+        DEBUG,
+        INFO,
+        WARN,
+        ERROR,
     }
 }

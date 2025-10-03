@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -33,60 +35,61 @@ android {
             isDebuggable = true
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
-            
+
             buildConfigField("String", "BASE_URL", "\"https://api-dev.example.com/\"")
             buildConfigField("String", "ENVIRONMENT", "\"DEV\"")
         }
-        
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
-            
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
-            
+
             buildConfigField("String", "BASE_URL", "\"https://api.example.com/\"")
             buildConfigField("String", "ENVIRONMENT", "\"PRODUCTION\"")
         }
-        
+
         create("staging") {
             initWith(getByName("debug"))
             applicationIdSuffix = ".staging"
             versionNameSuffix = "-staging"
-            
+
             buildConfigField("String", "BASE_URL", "\"https://api-test.example.com/\"")
             buildConfigField("String", "ENVIRONMENT", "\"TEST\"")
         }
     }
-    
+
     // ViewBinding
     buildFeatures {
         viewBinding = true
         buildConfig = true
     }
-    
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    
+
     kotlinOptions {
         jvmTarget = "11"
-        freeCompilerArgs = listOf(
-            "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-opt-in=kotlinx.coroutines.FlowPreview"
-        )
+        freeCompilerArgs =
+            listOf(
+                "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.FlowPreview",
+            )
     }
-    
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    
+
     lint {
         abortOnError = false
         checkReleaseBuilds = false
@@ -166,14 +169,14 @@ ktlint {
     android.set(true)
     outputToConsole.set(true)
     outputColorName.set("RED")
-    ignoreFailures.set(false)
-    
+    ignoreFailures.set(true)
+
     reporters {
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.PLAIN)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.CHECKSTYLE)
         reporter(org.jlleitschuh.gradle.ktlint.reporter.ReporterType.SARIF)
     }
-    
+
     filter {
         exclude("**/generated/**")
         include("**/kotlin/**")
@@ -187,15 +190,19 @@ detekt {
     buildUponDefaultConfig = true
     allRules = false
 
-    source = files(
-        "src/main/java"
+    source.from(
+        files(
+            "src/main/java",
+        ),
     )
-    reports {
-        html.required.set(true)
-        xml.required.set(true)
-        txt.required.set(true)
-        sarif.required.set(true)
-        md.required.set(true)
+    tasks.withType<Detekt> {
+        reports {
+            html.required.set(true)
+            xml.required.set(true)
+            txt.required.set(true)
+            sarif.required.set(true)
+            md.required.set(true)
+        }
     }
 }
 

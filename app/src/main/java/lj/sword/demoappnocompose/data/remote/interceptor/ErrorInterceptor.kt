@@ -9,18 +9,17 @@ import java.net.SocketTimeoutException
 /**
  * 错误处理拦截器
  * 统一处理网络请求错误
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 class ErrorInterceptor : Interceptor {
-
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        
+
         try {
             val response = chain.proceed(request)
-            
+
             // 处理 HTTP 错误码
             if (!response.isSuccessful) {
                 when (response.code) {
@@ -32,7 +31,7 @@ class ErrorInterceptor : Interceptor {
                     403 -> {
                         throw ApiException(
                             ApiException.CODE_PERMISSION_DENIED,
-                            ApiException.MSG_PERMISSION_DENIED
+                            ApiException.MSG_PERMISSION_DENIED,
                         )
                     }
                     in 500..599 -> {
@@ -41,12 +40,12 @@ class ErrorInterceptor : Interceptor {
                     else -> {
                         throw ApiException(
                             response.code,
-                            response.message
+                            response.message,
                         )
                     }
                 }
             }
-            
+
             return response
         } catch (e: SocketTimeoutException) {
             throw ApiException.timeoutError()

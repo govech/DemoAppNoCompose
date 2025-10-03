@@ -14,14 +14,13 @@ import javax.inject.Singleton
 /**
  * DataStore 依赖注入模块
  * 提供 DataStore 相关依赖
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_preferences")
 
     /**
@@ -29,7 +28,9 @@ object DataStoreModule {
      */
     @Provides
     @Singleton
-    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+    fun provideDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> {
         return context.dataStore
     }
 }

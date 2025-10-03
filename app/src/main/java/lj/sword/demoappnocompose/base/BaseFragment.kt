@@ -14,15 +14,14 @@ import kotlinx.coroutines.launch
 /**
  * Fragment 基类
  * 提供统一的 ViewBinding、ViewModel 绑定、懒加载机制
- * 
+ *
  * @param VB ViewBinding 类型
  * @param VM ViewModel 类型
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
-
     /**
      * ViewBinding 实例
      */
@@ -42,13 +41,16 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = createBinding(inflater, container)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
 
         // 初始化视图
@@ -64,7 +66,10 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
     /**
      * 创建 ViewBinding（子类实现）
      */
-    protected abstract fun createBinding(inflater: LayoutInflater, container: ViewGroup?): VB
+    protected abstract fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+    ): VB
 
     /**
      * 初始化视图（子类实现）

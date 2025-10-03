@@ -17,14 +17,13 @@ import javax.inject.Singleton
 /**
  * 内存管理依赖注入模块
  * 提供内存管理相关的实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object MemoryModule {
-
     /**
      * 提供内存缓存
      */
@@ -51,7 +50,7 @@ object MemoryModule {
     fun provideImageCacheManager(
         @ApplicationContext context: Context,
         appConfig: AppConfig,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): ImageCacheManager {
         return ImageCacheManager(context, appConfig, okHttpClient)
     }
@@ -65,7 +64,7 @@ object MemoryModule {
         appConfig: AppConfig,
         memoryCache: MemoryCache,
         networkObjectPool: NetworkObjectPool,
-        imageCacheManager: ImageCacheManager
+        imageCacheManager: ImageCacheManager,
     ): MemoryManager {
         return MemoryManager(appConfig, memoryCache, networkObjectPool, imageCacheManager)
     }

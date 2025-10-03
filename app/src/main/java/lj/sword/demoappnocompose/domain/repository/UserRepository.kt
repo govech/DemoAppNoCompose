@@ -6,19 +6,21 @@ import lj.sword.demoappnocompose.domain.model.User
 /**
  * 用户仓库接口
  * Domain层定义的用户数据访问接口，由Data层实现
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 interface UserRepository {
-
     /**
      * 用户登录
      * @param username 用户名
      * @param password 密码
      * @return Flow<User> 用户信息流
      */
-    suspend fun login(username: String, password: String): Flow<User>
+    suspend fun login(
+        username: String,
+        password: String,
+    ): Flow<User>
 
     /**
      * 获取当前登录用户信息
@@ -46,7 +48,10 @@ interface UserRepository {
      * @param avatarUrl 头像URL
      * @return Flow<User> 更新后的用户信息流
      */
-    suspend fun updateUserAvatar(userId: String, avatarUrl: String): Flow<User>
+    suspend fun updateUserAvatar(
+        userId: String,
+        avatarUrl: String,
+    ): Flow<User>
 
     /**
      * 检查用户是否已登录

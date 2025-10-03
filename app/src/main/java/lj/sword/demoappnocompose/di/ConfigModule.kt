@@ -13,29 +13,26 @@ import javax.inject.Singleton
 /**
  * 配置依赖注入模块
  * 提供应用配置相关的实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object ConfigModule {
-
     /**
      * 提供应用配置提供者
      */
     @Provides
     @Singleton
-    fun provideAppConfigProvider(@ApplicationContext context: Context): AppConfigProvider {
-        return AppConfigProvider(context)
-    }
+    fun provideAppConfigProvider(
+        @ApplicationContext context: Context,
+    ): AppConfigProvider = AppConfigProvider(context)
 
     /**
      * 提供应用配置实例
      */
     @Provides
     @Singleton
-    fun provideAppConfig(provider: AppConfigProvider): AppConfig {
-        return provider.getConfig()
-    }
+    fun provideAppConfig(provider: AppConfigProvider): AppConfig = provider.getConfig()
 }

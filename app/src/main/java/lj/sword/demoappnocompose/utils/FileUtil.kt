@@ -9,12 +9,11 @@ import java.text.DecimalFormat
 /**
  * 文件工具类
  * 提供文件读写、缓存管理等功能
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 object FileUtil {
-
     /**
      * 获取缓存目录
      */
@@ -97,13 +96,16 @@ object FileUtil {
      * 复制文件
      */
     @JvmStatic
-    fun copyFile(sourcePath: String, destPath: String): Boolean {
+    fun copyFile(
+        sourcePath: String,
+        destPath: String,
+    ): Boolean {
         return try {
             val sourceFile = File(sourcePath)
             val destFile = File(destPath)
-            
+
             destFile.parentFile?.mkdirs()
-            
+
             FileInputStream(sourceFile).use { input ->
                 FileOutputStream(destFile).use { output ->
                     input.copyTo(output)
@@ -133,7 +135,10 @@ object FileUtil {
      * 写入文件内容
      */
     @JvmStatic
-    fun writeFile(path: String, content: String): Boolean {
+    fun writeFile(
+        path: String,
+        content: String,
+    ): Boolean {
         return try {
             val file = createFile(path) ?: return false
             file.writeText(content)
@@ -178,11 +183,12 @@ object FileUtil {
         var size = 0L
         try {
             directory.listFiles()?.forEach { file ->
-                size += if (file.isDirectory) {
-                    getDirectorySize(file)
-                } else {
-                    file.length()
-                }
+                size +=
+                    if (file.isDirectory) {
+                        getDirectorySize(file)
+                    } else {
+                        file.length()
+                    }
             }
         } catch (e: Exception) {
             e.printStackTrace()

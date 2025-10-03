@@ -3,9 +3,9 @@ package lj.sword.demoappnocompose.base
 /**
  * UI 状态密封类
  * 统一管理页面的各种状态
- * 
+ *
  * @param T 数据类型
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
@@ -31,7 +31,7 @@ sealed class UiState<out T> {
     data class Error(
         val code: Int = -1,
         val message: String,
-        val throwable: Throwable? = null
+        val throwable: Throwable? = null,
     ) : UiState<Nothing>()
 
     /**

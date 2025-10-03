@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import lj.sword.demoappnocompose.BuildConfig
 import lj.sword.demoappnocompose.config.AppConfig
 import lj.sword.demoappnocompose.data.remote.ApiService
 import lj.sword.demoappnocompose.data.remote.interceptor.ErrorInterceptor
@@ -20,14 +19,13 @@ import javax.inject.Singleton
 /**
  * 网络层依赖注入模块
  * 提供 Retrofit、OkHttp 等网络相关依赖
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     /**
      * 提供 OkHttpClient 实例
      */
@@ -38,7 +36,7 @@ object NetworkModule {
         loggingInterceptor: HttpLoggingInterceptor,
         headerInterceptor: HeaderInterceptor,
         errorInterceptor: ErrorInterceptor,
-        networkPerformanceInterceptor: NetworkPerformanceInterceptor
+        networkPerformanceInterceptor: NetworkPerformanceInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(appConfig.connectTimeout, TimeUnit.SECONDS)
@@ -78,11 +76,12 @@ object NetworkModule {
     @Singleton
     fun provideLoggingInterceptor(appConfig: AppConfig): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            level = if (appConfig.enableNetworkLog) {
-                HttpLoggingInterceptor.Level.BODY
-            } else {
-                HttpLoggingInterceptor.Level.NONE
-            }
+            level =
+                if (appConfig.enableNetworkLog) {
+                    HttpLoggingInterceptor.Level.BODY
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
         }
     }
 
@@ -91,7 +90,10 @@ object NetworkModule {
      */
     @Provides
     @Singleton
-    fun provideRetrofit(appConfig: AppConfig, okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        appConfig: AppConfig,
+        okHttpClient: OkHttpClient,
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(appConfig.baseUrl)
             .client(okHttpClient)

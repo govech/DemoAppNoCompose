@@ -16,14 +16,13 @@ import javax.inject.Singleton
 /**
  * 性能监控依赖注入模块
  * 提供性能监控相关的实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object MonitorModule {
-
     /**
      * 提供启动时间追踪器
      */
@@ -40,7 +39,7 @@ object MonitorModule {
     @Singleton
     fun provideMemoryMonitor(
         @ApplicationContext context: Context,
-        appConfig: AppConfig
+        appConfig: AppConfig,
     ): MemoryMonitor {
         return MemoryMonitor(context, appConfig)
     }
@@ -64,14 +63,14 @@ object MonitorModule {
         appConfig: AppConfig,
         startupTimeTracker: StartupTimeTracker,
         memoryMonitor: MemoryMonitor,
-        networkPerformanceInterceptor: NetworkPerformanceInterceptor
+        networkPerformanceInterceptor: NetworkPerformanceInterceptor,
     ): PerformanceMonitor {
         return PerformanceMonitor(
             context,
             appConfig,
             startupTimeTracker,
             memoryMonitor,
-            networkPerformanceInterceptor
+            networkPerformanceInterceptor,
         )
     }
 }

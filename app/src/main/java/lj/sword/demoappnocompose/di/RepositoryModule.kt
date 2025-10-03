@@ -16,14 +16,13 @@ import javax.inject.Singleton
 /**
  * Repository 依赖注入模块
  * 提供 Repository 实例
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
     /**
      * 提供 LoginRepository 实例
      */
@@ -31,7 +30,7 @@ object RepositoryModule {
     @Singleton
     fun provideLoginRepository(
         apiService: ApiService,
-        dataStoreManager: DataStoreManager
+        dataStoreManager: DataStoreManager,
     ): LoginRepository {
         return LoginRepository(apiService, dataStoreManager)
     }
@@ -45,7 +44,7 @@ object RepositoryModule {
         apiService: ApiService,
         dataStoreManager: DataStoreManager,
         userDao: UserDao,
-        loginRepository: LoginRepository
+        loginRepository: LoginRepository,
     ): UserRepositoryImpl {
         return UserRepositoryImpl(apiService, dataStoreManager, userDao, loginRepository)
     }
@@ -58,13 +57,10 @@ object RepositoryModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryBindModule {
-
     /**
      * 绑定 UserRepository 接口到 UserRepositoryImpl 实现
      */
     @Binds
     @Singleton
-    abstract fun bindUserRepository(
-        userRepositoryImpl: UserRepositoryImpl
-    ): UserRepository
+    abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 }

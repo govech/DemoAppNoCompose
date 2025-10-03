@@ -15,14 +15,13 @@ import javax.inject.Singleton
 /**
  * 数据库依赖注入模块
  * 提供 Room 数据库相关依赖
- * 
+ *
  * @author Sword
  * @since 1.0.0
  */
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     /**
      * 提供 Room 数据库实例
      */
@@ -30,20 +29,21 @@ object DatabaseModule {
     @Singleton
     fun provideAppDatabase(
         @ApplicationContext context: Context,
-        appConfig: AppConfig
+        appConfig: AppConfig,
     ): AppDatabase {
-        val builder = Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            appConfig.databaseName
-        )
-            .fallbackToDestructiveMigration() // 简单情况下可以使用，生产环境建议实现 Migration
-        
+        val builder =
+            Room.databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                appConfig.databaseName,
+            )
+                .fallbackToDestructiveMigration() // 简单情况下可以使用，生产环境建议实现 Migration
+
         // 根据配置启用WAL模式
         if (appConfig.enableWalMode) {
             builder.setJournalMode(androidx.room.RoomDatabase.JournalMode.WRITE_AHEAD_LOGGING)
         }
-        
+
         return builder.build()
     }
 
