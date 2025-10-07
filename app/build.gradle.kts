@@ -157,6 +157,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     detektPlugins(libs.detekt.formatting)
+
+    implementation(libs.easypermisition)
 }
 
 // 代码质量工具配置

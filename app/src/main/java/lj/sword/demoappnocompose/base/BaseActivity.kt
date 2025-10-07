@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
+import com.cairong.permission.PermissionManager
 import kotlinx.coroutines.launch
 
 /**
@@ -42,7 +43,7 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        PermissionManager.initialize(this)
         // 使用扩展函数自动创建 ViewBinding（无反射）
         binding = inflateBinding(bindingInflater)
         setContentView(binding.root)
